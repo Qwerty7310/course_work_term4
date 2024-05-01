@@ -1,0 +1,36 @@
+﻿  WindowsProject4.cpp
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(321,10): warning C4101: rectClient: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(459,40): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(459,19): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(460,98): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(460,81): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(460,62): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(460,53): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(462,40): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(462,23): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(463,106): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(463,92): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(463,66): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(463,52): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(474,24): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(475,42): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(475,31): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(476,41): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(476,31): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(477,42): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(477,31): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(478,40): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(478,31): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(479,42): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(479,31): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(480,41): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(480,31): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(481,42): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(481,31): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(482,34): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(482,23): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(483,34): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(483,23): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(495,34): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(496,29): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+  WindowsProject4.vcxproj -> C:\Users\daniil\source\repos\WindowsProject4\Debug\WindowsProject4.exe
