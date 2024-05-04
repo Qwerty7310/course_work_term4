@@ -27,7 +27,9 @@ HWND hCheckBox1;
 HWND hCheckBox2;
 HWND hCheckBox3;
 
-HWND *CheckBox[3] = { &hCheckBox1, &hCheckBox2, &hCheckBox3 };
+LPCWSTR CheckBoxNames[3] = { L"y = sin(x)", L"y = πx / 10 - 1", L"y = cos(x)" };
+int CheckBoxIDs[3] = { 2001, 2002, 2003 };
+HWND CheckBox[3];
 
 WNDPROC g_pTabCtrlProc = nullptr; // Объявление и инициализация указателя
 WNDPROC g_pGraphPageProc = nullptr; // Объявление и инициализация указателя
@@ -57,7 +59,7 @@ double** x; // массив данных, глобальный
 
 const int NUM = 70; // Примерное количество точек для графика
 
-HDC hdc;
+//HDC hdc;
 
 // Функция WinMain
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -238,8 +240,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
     case WM_PAINT:
     {
+        /*
         PAINTSTRUCT ps;
-        hdc = BeginPaint(hWnd, &ps);
+        HDC hdc = BeginPaint(hWnd, &ps);
         RECT r; //объявляем экзмепляр структуры RECT - координаты прямоугольника.
         r.left = 100; //левый верхний угол
         r.top = 100;
@@ -248,7 +251,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         //Заполняем прямоугольник
         FillRect(hdc, &r, (HBRUSH)CreateSolidBrush(RGB(70, 200, 100)));
-        EndPaint(hWnd, &ps);
+        EndPaint(hWnd, &ps);*/
 
     }
     break;
@@ -261,8 +264,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         SetWindowPos(hGraphPage, NULL, 15, 60, rcClient.right - 30, rcClient.bottom - 85, SWP_NOZORDER);
         SetWindowPos(hHistogramPage, NULL, 15, 60, rcClient.right - 30, rcClient.bottom - 85, SWP_NOZORDER);
         SetWindowPos(hPieChartPage, NULL, 15, 60, rcClient.right - 30, rcClient.bottom - 85, SWP_NOZORDER);
+        break;
     }
-    break;
+    case WM_GETMINMAXINFO:
+    {
+        LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
+        lpMMI->ptMinTrackSize.x = 300;
+        lpMMI->ptMinTrackSize.y = 300;
+        break;
+    }
     case WM_DESTROY:
         // Отменяем присвоение обработчика сообщений TabControl
         SetWindowLongPtr(hTabControl, GWLP_WNDPROC, (LONG_PTR)g_pTabCtrlProc);
@@ -330,18 +340,6 @@ void DrawPieChart(HWND hWnd)
     ReleaseDC(hWnd, hdc);
 }
 
-/*double** getData(int size)
-{
-    double** data = new double* [size];
-    for (int i = 0; i < size; ++i)
-    {
-        data[i] = new double[2]; // Предположим, что у нас два значения x и y для каждой точки
-        data[i][0] = i; // Просто заглушка для x, например, от 0 до size-1
-        data[i][1] = rand() % 100; // Просто случайные значения для y
-    }
-    return data;
-}*/
-
 double** getData(int n)
 {
     double** f;
@@ -354,10 +352,12 @@ double** getData(int n)
     {
         // 3 графика (4-1)
         double x = (double)i * 0.099;
+        //double x = (double)i;
         f[0][i] = x;
         f[3][i] = sin(x);
         f[1][i] = cos(x); //!!!!!
-        f[2][i] = 0.31459265358979 * x - 1.0; //!!!!!!!!!
+        //f[2][i] = 0.31459265358979 * x - 1.0; //!!!!!!!!!
+        f[2][i] = 3.14159265358979 * x / 10 - 1.0; //!!!!!!!!!
     }
     return f;
 }
@@ -375,7 +375,7 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
-        hdc = BeginPaint(hWnd, &ps);
+        HDC hdc = BeginPaint(hWnd, &ps);
         RECT r; //объявляем экзмепляр структуры RECT - координаты прямоугольника.
         r.left = 50; //левый верхний угол
         r.top = 50;
@@ -411,7 +411,7 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     {
         //OutputDebugString(L"PieChartPageProc 2 !!!!!!!!!!\n");
         PAINTSTRUCT ps;
-        hdc = BeginPaint(hWnd, &ps);
+        HDC hdc = BeginPaint(hWnd, &ps);
         RECT r; //объявляем экзмепляр структуры RECT - координаты прямоугольника.
         r.left = 0; //левый верхний угол
         r.top = 0;

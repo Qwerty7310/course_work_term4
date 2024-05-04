@@ -5,6 +5,7 @@
 #include <vector> // Для работы с данными для графиков и диаграмм
 #include <cmath> // Для математических функций
 #include <tchar.h>
+#include <string>
 
 #pragma comment(lib, "Comctl32.lib") // Подключаем Comctl32.lib
 
@@ -23,7 +24,9 @@ extern HWND hButton;
 extern HWND hCheckBox1;
 extern HWND hCheckBox2;
 extern HWND hCheckBox3;
-extern HWND* CheckBox[3];
+extern LPCWSTR CheckBoxNames[3];
+extern int CheckBoxIDs[3];
+extern HWND CheckBox[3];
 extern WNDPROC g_pTabCtrlProc; // Объявление и инициализация указателя
 extern WNDPROC g_pGraphPageProc; // Объявление и инициализация указателя
 extern WNDPROC g_pHistogramPageProc; // Объявление и инициализация указателя
@@ -60,4 +63,4 @@ extern double** x; // массив данных, глобальный
 
 extern const int NUM; // Примерное количество точек для графика
 
-extern HDC hdc;
+//extern HDC hdc;
