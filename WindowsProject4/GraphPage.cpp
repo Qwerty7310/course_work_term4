@@ -72,24 +72,7 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         case ID_CHECKBOX_1:
             // Обработка нажатия на чекбокс 1
             OutputDebugString(L"ID_CHECKBOX_1!\n");
-
-            //hBrush = CreateSolidBrush(RGB(100, 100, 100)); // Создаем кисть с белым цветом
-            //FillRect(hdc, &rectClient, hBrush); // Заливаем всю клиентскую область белым цветом
-            //DeleteObject(hBrush); // Освобождаем ресурсы кисти
-
-
-            //RedrawWindow(hGraphPage, &rectClient, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_FRAME | RDW_ALLCHILDREN);
-
-            //DestroyWindow(hGraphPage);
-            //hGraphPage = CreateWindow(WC_STATIC, L"", WS_CHILD | WS_VISIBLE,
-                //0, 20, 760, 540, hWnd, nullptr, hInst, nullptr);
-
             InvalidateRect(hGraphPage, NULL, TRUE);
-            //RedrawWindow(hGraphPage, &rectClient, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_FRAME | RDW_ALLCHILDREN);
-            //UpdateWindow(hGraphPage);
-
-            //DrawGraph(hdc, rectClient, x, NUM, 3); // построение графика
-
             /*
             // Получаем текущий статус чекбокса
             state = SendMessage(hCheckBox1, BM_GETCHECK, 0, 0);
@@ -113,60 +96,12 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         case ID_CHECKBOX_2:
             // Обработка нажатия на чекбокс 2
             OutputDebugString(L"ID_CHECKBOX_2!\n");
-
-            //hBrush = CreateSolidBrush(RGB(255, 255, 255)); // Создаем кисть с белым цветом
-            //FillRect(hdc, &rectClient, hBrush); // Заливаем всю клиентскую область белым цветом
-            //DeleteObject(hBrush); // Освобождаем ресурсы кисти
-
             InvalidateRect(hGraphPage, NULL, TRUE);
-
-            /*
-            // Получаем текущий статус чекбокса
-            state = SendMessage(hCheckBox2, BM_GETCHECK, 0, 0);
-            // Проверяем статус чекбокса
-            switch (state)
-            {
-            case BST_CHECKED: // Чекбокс нажат
-                // Сбрасываем состояние чекбокса
-                SendMessage(hCheckBox2, BM_SETCHECK, BST_UNCHECKED, 0);
-                break;
-            case BST_UNCHECKED: // Чекбокс не нажат
-                // Устанавливаем состояние чекбокса в "нажатое"
-                SendMessage(hCheckBox2, BM_SETCHECK, BST_CHECKED, 0);
-                break;
-            default:
-                // Неопределенный статус
-                break;
-            }*/
             break;
         case ID_CHECKBOX_3:
             // Обработка нажатия на чекбокс 3
             OutputDebugString(L"ID_CHECKBOX_3!\n");
-            
-            //hBrush = CreateSolidBrush(RGB(255, 255, 255)); // Создаем кисть с белым цветом
-            //FillRect(hdc, &rectClient, hBrush); // Заливаем всю клиентскую область белым цветом
-            //DeleteObject(hBrush); // Освобождаем ресурсы кисти
-
             InvalidateRect(hGraphPage, NULL, TRUE);
-
-            /*
-            // Получаем текущий статус чекбокса
-            state = SendMessage(hCheckBox3, BM_GETCHECK, 0, 0);
-            // Проверяем статус чекбокса
-            switch (state)
-            {
-            case BST_CHECKED: // Чекбокс нажат
-                // Сбрасываем состояние чекбокса
-                SendMessage(hCheckBox3, BM_SETCHECK, BST_UNCHECKED, 0);
-                break;
-            case BST_UNCHECKED: // Чекбокс не нажат
-                // Устанавливаем состояние чекбокса в "нажатое"
-                SendMessage(hCheckBox3, BM_SETCHECK, BST_CHECKED, 0);
-                break;
-            default:
-                // Неопределенный статус
-                break;
-            }*/
             break;
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -214,19 +149,29 @@ void DrawGraph(HDC hdc, RECT rectClient, double** x, // массив данных
     OffsetY = max * height / (MAX_Y); // смещение Y
     ScaleY = (double)height / MAX_Y; // масштабный коэффициент Y
     // Отрисовка осей координат
-    hpen = CreatePen(PS_SOLID, 3, 0); // чёрное перо толщиной в 3 пикселя
+    hpen = CreatePen(PS_SOLID, 2, 0); // чёрное перо толщиной в 3 пикселя
     SelectObject(hdc, hpen);
     line(hdc, 10, OffsetY, width - 10, OffsetY); // рисование горизонтальной оси line(hdc, width - 10, OffsetY, width - 15, OffsetY - 5); // верхнее горизонтальное оперение line(hdc, width - 10, OffsetY, width - 15, OffsetY + 5); // нижнее горизонтальное оперение
-    for (int i = 0; i < 9; i++) line(hdc, i * 0.118 * width, OffsetY, i * 0.118 * width, OffsetY - 3);
+    
+    //рисование стрелочек
+    line(hdc, width - 20, OffsetY - 5, width - 10, OffsetY);
+    line(hdc, width - 20, OffsetY + 5, width - 10, OffsetY);
+    
+    for (int i = 1; i < 9; i++) line(hdc, i * 0.118 * width, OffsetY, i * 0.118 * width, OffsetY - 3);
     // отметки на горизонтальной оси
-    line(hdc, OffsetX + 10, 0, OffsetX + 10, height - 5); // рисование вертикальной оси line(hdc, OffsetX + 10, 0, OffsetX + 15, 10); // рисование правого вертикального оперения line(hdc, OffsetX + 10, 0, OffsetX + 5, 10); // рисование левого вертикального оперения
+    line(hdc, OffsetX + 10, 10, OffsetX + 10, height - 5); // рисование вертикальной оси line(hdc, OffsetX + 10, 0, OffsetX + 15, 10); // рисование правого вертикального оперения line(hdc, OffsetX + 10, 0, OffsetX + 5, 10); // рисование левого вертикального оперения
+  
+    //рисование стрелочек
+    line(hdc, OffsetX + 5, 20, OffsetX + 10, 10);
+    line(hdc, OffsetX + 15, 20, OffsetX + 10, 10);
+    
     for (int i = -2; i < 3; i++) line(hdc, OffsetX + 10, OffsetY + height / 6 * i, OffsetX + 15, OffsetY + height / 6 * i);
     // отметки на вертикальной оси
     DeleteObject(hpen); // удаление черного пера
 
                 // Отрисовка графика функции
     int color = 0xFF0000; // синее перо для первого ряда данных
-    //TextOut(hdc, 21, 7, _T("Y = sin (X)"), 13); // Вывод текста y=sin(x) 8 символов
+    //TextOut(hdc, 21, 7, _T("Y = sin (X)"), 11); // Вывод текста y=sin(x) 8 символов
     TextOut(hdc, 27, height / 6 - 12, _T("1,0"), 3);
     TextOut(hdc, 27, height / 3 - 12, _T("0,5"), 3);
     TextOut(hdc, 27, 2 * height / 3 - 12, _T("-0,5"), 4);
@@ -317,4 +262,26 @@ void DrawTextOnGraphPage(HDC hdc, RECT rectClient) {
     // Освобождение шрифта
     DeleteObject(hFont);
 
+}
+
+double** getGraphData(int n)
+{
+    double** f;
+    f = new double* [4];
+    f[0] = new double[n];
+    f[1] = new double[n];
+    f[2] = new double[n];
+    f[3] = new double[n];
+    for (int i = 0; i < n; i++)
+    {
+        // 3 графика (4-1)
+        double x = (double)i * 0.099;
+        //double x = (double)i;
+        f[0][i] = x;
+        f[3][i] = sin(x);
+        f[1][i] = cos(x); //!!!!!
+        //f[2][i] = 0.31459265358979 * x - 1.0; //!!!!!!!!!
+        f[2][i] = 3.14159265358979 * x / 10 - 1.0; //!!!!!!!!!
+    }
+    return f;
 }

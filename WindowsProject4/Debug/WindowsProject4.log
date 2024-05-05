@@ -1,2 +1,13 @@
-﻿  WindowsProject4.cpp
+﻿  HistogramPage.cpp
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(9,10): warning C4101: state: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(88,37): warning C4101: MAX_X: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(88,21): warning C4101: OffsetX: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(89,17): warning C4101: max: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(90,12): warning C4101: Y: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(88,66): warning C4101: ScaleY: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(88,12): warning C4101: OffsetY: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(89,12): warning C4101: min: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(88,44): warning C4101: MAX_Y: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(88,58): warning C4101: ScaleX: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(90,9): warning C4101: X: неиспользованная локальная переменная
   WindowsProject4.vcxproj -> C:\Users\daniil\source\repos\WindowsProject4\Debug\WindowsProject4.exe

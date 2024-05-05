@@ -1,6 +1,7 @@
 ﻿//#pragma once
 
 #include "GraphPage.h"
+#include "HistogramPage.h"
 
 //#include <windows.h>
 //#include <CommCtrl.h> // Для использования элемента управления TabControl
@@ -10,10 +11,7 @@
 
 //#pragma comment(lib, "Comctl32.lib") // Подключаем Comctl32.lib
 
-//#define IDC_TABCONTROL 1001 // Примерный номер идентификатора для TabControl
-//#define ID_CHECKBOX_1 2001
-//#define ID_CHECKBOX_2 2002
-//#define ID_CHECKBOX_3 2003
+#define IDC_TABCONTROL 1001 // Примерный номер идентификатора для TabControl
 
 // Глобальные переменные
 HINSTANCE hInst;
@@ -21,15 +19,31 @@ HWND hTabControl;
 HWND hGraphPage;
 HWND hHistogramPage;
 HWND hPieChartPage;
-HWND hButton;
 
-HWND hCheckBox1;
-HWND hCheckBox2;
-HWND hCheckBox3;
-
-LPCWSTR CheckBoxNames[3] = { L"y = sin(x)", L"y = πx / 10 - 1", L"y = cos(x)" };
+LPCWSTR CheckBoxNames[3] = { L"y = cos(x)", L"y = πx / 10 - 1", L"y = sin(x)" };
 int CheckBoxIDs[3] = { 2001, 2002, 2003 };
 HWND CheckBox[3];
+
+int numHistTextBox = 3;
+//LPWSTR HistTextBoxTexts[5][2] = {
+//    {(LPWSTR)"1", (LPWSTR)"Text1"},
+//    {(LPWSTR)"2", (LPWSTR)"Text2"},
+//    {(LPWSTR)"3", (LPWSTR)"Text3"},
+//    {(LPWSTR)"4", (LPWSTR)"Text4"},
+//    {(LPWSTR)"5", (LPWSTR)"Text5"}
+//};
+int HistTextBoxIDs[5][2] = {
+    {3001, 3002},
+    {3011, 3012},
+    {3021, 3022},
+    {3031, 3032},
+    {3041, 3042}
+};
+HWND HistTextBox[5][2];
+
+HWND addButton;
+HWND deleteButton;
+HWND createButton;
 
 WNDPROC g_pTabCtrlProc = nullptr; // Объявление и инициализация указателя
 WNDPROC g_pGraphPageProc = nullptr; // Объявление и инициализация указателя
@@ -39,23 +53,24 @@ WNDPROC g_pPieChartPageProc = nullptr; // Объявление и инициал
 // Прототипы функций
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK TabControlProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-//LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+//LRESULT CALLBACK TabControlProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 //void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // рисование отрезка прямой линии
 
-void DrawGraph(HDC hdc, RECT rectClient, double** x, int n, int numrow);
-void DrawTextOnGraphPage(HDC hdc, RECT rectClient); // текст
-void DrawHistogram(HWND hWnd);
-void DrawPieChart(HWND hWnd);
-double** getData(int size);
+//void DrawGraph(HDC hdc, RECT rectClient, double** x, int n, int numrow);
+//void DrawTextOnGraphPage(HDC hdc, RECT rectClient); // текст
+//void DrawHistogram(HWND hWnd);
+//void DrawPieChart(HWND hWnd);
+//double** getData(int size);
 void line(HDC hdc, int Xs, int Ys, int Xf, int Yf);
 //int p = 0;
 
 
-double** x; // массив данных, глобальный
+double** x; // массив данных для построения графиков
+double* HistData; // массив данных для построения гистограммы
 
 const int NUM = 70; // Примерное количество точек для графика
 
@@ -83,7 +98,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wcex.lpszClassName = L"MainWindow";
     wcex.hIconSm = LoadIcon(wcex.hInstance, IDI_APPLICATION);
 
-    x = getData(NUM); // задание исходны данных
+    x = getGraphData(NUM); // задание исходных данных
 
     if (!RegisterClassEx(&wcex))
     {
@@ -173,20 +188,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     case WM_CREATE:
     {
-        //OutputDebugString(L"Is called111111\n");
         // Создаем элемент управления TabControl
         hTabControl = CreateWindow(WC_TABCONTROL, L"", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
             10, 30, 760, 540, hWnd, (HMENU)IDC_TABCONTROL, hInst, NULL);
 
-        // Создаем дочерние окна для каждой вкладки и связываем их с элементом управления TabControl
-        //hGraphPage = CreateWindow(WC_STATIC, L"", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-        //    0, 20, 760, 520, hWnd, (HMENU)hTabControl, hInst, nullptr);
+        // Создаем дочерние окна для каждой вкладки
         hGraphPage = CreateWindow(WC_STATIC, L"", WS_CHILD | WS_VISIBLE,
             0, 20, 760, 540, hWnd, nullptr, hInst, nullptr);
 
         if (hGraphPage)
         {
-            //OutputDebugString(L"GraphPageProc\n");
             g_pGraphPageProc = (WNDPROC)SetWindowLongPtr(hGraphPage, GWLP_WNDPROC, (LONG_PTR)GraphPageProc); // Заменяем процедуру окна
         }
 
@@ -195,7 +206,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         if (hHistogramPage)
         {
-            //OutputDebugString(L"GraphPageProc\n");
             g_pHistogramPageProc = (WNDPROC)SetWindowLongPtr(hHistogramPage, GWLP_WNDPROC, (LONG_PTR)HistogramPageProc); // Заменяем процедуру окна
         }
 
@@ -204,7 +214,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         if (hPieChartPage)
         {
-            //OutputDebugString(L"GraphPageProc\n");
             g_pPieChartPageProc = (WNDPROC)SetWindowLongPtr(hPieChartPage, GWLP_WNDPROC, (LONG_PTR)PieChartPageProc); // Заменяем процедуру окна
         }
 
@@ -224,35 +233,35 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         tie.lParam = (LPARAM)hPieChartPage;
         TabCtrl_InsertItem(hTabControl, 2, &tie);
 
-        // Установка нового обработчика сообщений для элемента управления TabControl
-        //g_pTabCtrlProc = (WNDPROC)SetWindowLongPtr(hTabControl, GWLP_WNDPROC, (LONG_PTR)TabControlProc);
+        //ShowWindow(hGraphPage, SW_SHOW);
+        //ShowWindow(hHistogramPage, SW_HIDE);
+        //ShowWindow(hPieChartPage, SW_HIDE);
 
-        ShowWindow(hGraphPage, SW_SHOW);
-        ShowWindow(hHistogramPage, SW_HIDE);
+        ShowWindow(hGraphPage, SW_HIDE);
+        ShowWindow(hHistogramPage, SW_SHOW);
         ShowWindow(hPieChartPage, SW_HIDE);
-
-        // Рисуем прямоугольник внутри окна GraphPage
-        //OutputDebugString(L"Is called 22222222222\n");
-       
-
         break;
     }
     break;
     case WM_PAINT:
     {
-        /*
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
         RECT r; //объявляем экзмепляр структуры RECT - координаты прямоугольника.
-        r.left = 100; //левый верхний угол
-        r.top = 100;
-        r.right = 200; //правый нижний
-        r.right = 300;
 
-        //Заполняем прямоугольник
-        FillRect(hdc, &r, (HBRUSH)CreateSolidBrush(RGB(70, 200, 100)));
-        EndPaint(hWnd, &ps);*/
+        //Создание надписи
+        HFONT hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+            OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+            DEFAULT_PITCH | FF_SWISS, L"Arial");
 
+        // серый цвет
+        SetTextColor(hdc, RGB(0, 0, 0));
+        SelectObject(hdc, hFont); // выбираем шрифт
+        SetBkMode(hdc, TRANSPARENT); // фон прозрачный
+
+        RECT rectText = { ps.rcPaint.left, 5, ps.rcPaint.right, ps.rcPaint.bottom };
+        DrawText(hdc, L"2D ГРАФИКИ", -1, &rectText, DT_CENTER);
+        break;
     }
     break;
     case WM_SIZE:
@@ -269,8 +278,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_GETMINMAXINFO:
     {
         LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-        lpMMI->ptMinTrackSize.x = 300;
-        lpMMI->ptMinTrackSize.y = 300;
+        lpMMI->ptMinTrackSize.x = 700;
+        lpMMI->ptMinTrackSize.y = 370;
         break;
     }
     case WM_DESTROY:
@@ -285,115 +294,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-// Обработчик события смены вкладок
-LRESULT CALLBACK TabControlProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-    case WM_PAINT:
-    {
-        /*
-        PAINTSTRUCT ps;
-        hdc = BeginPaint(hWnd, &ps);
-        RECT r; //объявляем экзмепляр структуры RECT - координаты прямоугольника.
-        r.left = 50; //левый верхний угол
-        r.top = 100;
-        r.right = 200; //правый нижний
-        r.right = 300;
-
-        //Заполняем прямоугольник
-        FillRect(hdc, &r, (HBRUSH)CreateSolidBrush(RGB(255, 0, 0)));*/
-        break;
-    }
-    }
-
-    // Вызываем старую функцию обработки сообщений
-    if (g_pTabCtrlProc)
-        return CallWindowProc(g_pTabCtrlProc, hWnd, message, wParam, lParam);
-    else
-        return DefWindowProc(hWnd, message, wParam, lParam);
-}
-
 void line(HDC hdc, int Xs, int Ys, int Xf, int Yf) // рисование отрезка прямой линии
 {
     MoveToEx(hdc, Xs, Ys, 0); // перемещение из точки (Xs, Ys)
     LineTo(hdc, Xf, Yf); // в точку (Xt, Yf)
-}
-
-
-
-// Функция рисования гистограммы на вкладке "Histogram"
-void DrawHistogram(HWND hWnd)
-{
-    // Здесь должен быть код для рисования гистограммы
-    HDC hdc = GetDC(hWnd);
-    TextOut(hdc, 10, 10, L"Histogram will be drawn here", 27);
-    ReleaseDC(hWnd, hdc);
-}
-
-// Функция рисования круговой диаграммы на вкладке "Pie Chart"
-void DrawPieChart(HWND hWnd)
-{
-    // Здесь должен быть код для рисования круговой диаграммы
-    HDC hdc = GetDC(hWnd);
-    TextOut(hdc, 10, 10, L"Pie Chart will be drawn here", 26);
-    ReleaseDC(hWnd, hdc);
-}
-
-double** getData(int n)
-{
-    double** f;
-    f = new double* [4];
-    f[0] = new double[n];
-    f[1] = new double[n];
-    f[2] = new double[n];
-    f[3] = new double[n];
-    for (int i = 0; i < n; i++)
-    {
-        // 3 графика (4-1)
-        double x = (double)i * 0.099;
-        //double x = (double)i;
-        f[0][i] = x;
-        f[3][i] = sin(x);
-        f[1][i] = cos(x); //!!!!!
-        //f[2][i] = 0.31459265358979 * x - 1.0; //!!!!!!!!!
-        f[2][i] = 3.14159265358979 * x / 10 - 1.0; //!!!!!!!!!
-    }
-    return f;
-}
-
-/****************************************************************************************
- *                                Вкладка HistogramPage                                 *
- ****************************************************************************************/
-
-    //Процедура окна
-LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    //OutputDebugString(L"HistogramPageProc 1\n");
-    switch (message)
-    {
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hWnd, &ps);
-        RECT r; //объявляем экзмепляр структуры RECT - координаты прямоугольника.
-        r.left = 50; //левый верхний угол
-        r.top = 50;
-        r.right = 100; //правый нижний
-        r.bottom = 300;
-
-        //Заполняем прямоугольник
-        FillRect(hdc, &r, (HBRUSH)CreateSolidBrush(RGB(255, 100, 255)));
-        EndPaint(hWnd, &ps);
-        break;
-    }
-    }
-
-    if (g_pHistogramPageProc)
-        return CallWindowProc(g_pHistogramPageProc, hWnd, message, wParam, lParam);
-    else
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    //return 0;
 }
 
 

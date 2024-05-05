@@ -9,28 +9,20 @@
 
 #pragma comment(lib, "Comctl32.lib") // Подключаем Comctl32.lib
 
-#define IDC_TABCONTROL 1001 // Примерный номер идентификатора для TabControl
+//#define IDC_TABCONTROL 1001 // Примерный номер идентификатора для TabControl
 #define ID_CHECKBOX_1 2001
 #define ID_CHECKBOX_2 2002
 #define ID_CHECKBOX_3 2003
 
 // Глобальные переменные
 extern HINSTANCE hInst;
-extern HWND hTabControl;
+//extern HWND hTabControl;
 extern HWND hGraphPage;
-extern HWND hHistogramPage;
-extern HWND hPieChartPage;
-extern HWND hButton;
-extern HWND hCheckBox1;
-extern HWND hCheckBox2;
-extern HWND hCheckBox3;
+//extern HWND hButton;
 extern LPCWSTR CheckBoxNames[3];
 extern int CheckBoxIDs[3];
 extern HWND CheckBox[3];
-extern WNDPROC g_pTabCtrlProc; // Объявление и инициализация указателя
 extern WNDPROC g_pGraphPageProc; // Объявление и инициализация указателя
-extern WNDPROC g_pHistogramPageProc; // Объявление и инициализация указателя
-extern WNDPROC g_pPieChartPageProc; // Объявление и инициализация указателя
 
 // Прототипы функций
 //BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
@@ -53,9 +45,9 @@ void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // рисование отрезка прямой 
 
 void DrawGraph(HDC hdc, RECT rectClient, double** x, int n, int numrow);
 void DrawTextOnGraphPage(HDC hdc, RECT rectClient); // текст
-void DrawHistogram(HWND hWnd);
-void DrawPieChart(HWND hWnd);
-double** getData(int size);
+//void DrawHistogram(HWND hWnd);
+//void DrawPieChart(HWND hWnd);
+double** getGraphData(int size);
 //int p = 0;
 
 
