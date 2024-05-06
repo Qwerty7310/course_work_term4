@@ -16,6 +16,7 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
     {
     case WM_PAINT:
     {
+        
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hHistogramPage, &ps); // Используйте hdc, объявленный локально;
         //OutputDebugString(L"WM_HISTOGRAM_PAINT!\n");
@@ -25,9 +26,10 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
         FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW));
 
         //SetTextColor(hdc, 0x00FF0000); // синий цвет букв
-        //DrawHistogram(hdc, ps.rcPaint, x, NUM, 3); // построение графика
+        if (flagDrawHist) DrawHistogram(hdc, ps.rcPaint, HistData); // построение графика
         DrawTextOnHistogramPage(hWnd, hdc, ps.rcPaint); // текст
         EndPaint(hHistogramPage, &ps);
+        flagDrawHist = false;
         break;
     }
     break;
@@ -61,6 +63,7 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
             }
             else {
                 OutputDebugString(L"HIST_InvalidateRect!\n");
+                flagDrawHist = true;
                 InvalidateRect(hHistogramPage, NULL, TRUE);
             }
             break;
@@ -79,9 +82,7 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 /*------------------------------ Функция рисования гистограммы ------------------------------*/
 
-void DrawHistogram(HDC hdc, RECT rectClient, double** x, // массив данных
-    int n, // количество точек
-    int numrow = 1) // количество рядов данных (по умолчанию 1)
+void DrawHistogram(HDC hdc, RECT rectClient, double* array)
 {
     OutputDebugString(L"DrawHistogram!\n");
     SetBkMode(hdc, TRANSPARENT); // фон прозрачный
@@ -92,63 +93,87 @@ void DrawHistogram(HDC hdc, RECT rectClient, double** x, // массив данных
     height = rectClient.bottom - rectClient.top - 50;
     width = rectClient.right - rectClient.left - 270;
 
-    double* arr = new double[numHistTextBox];
-    //getHistogramData(arr);
+    double sum = 0;
+    max = -1; //инициализируем переменную для поиска максимума
+    for (int i = 0; i < numHistTextBox; i++) {
+        sum += array[i];
+        if (array[i] > max) max = array[i];
+    }
+
+    double* rationToMax = new double[numHistTextBox];
+    for (int i = 0; i < numHistTextBox; i++) {
+        rationToMax[i] = array[i] / max;
+    }
+    int interval = (height - 20) / 5;
+
+    //Получаем порядок числа
+    int order = 0;
+    double tempDouble;
+    double maxLevel = 0;
+    int tempInt;
+
+    int multiplier = 0;
+    if (max < 10) {
+        tempDouble = max;
+        while (tempDouble < 10) {
+            multiplier += 1;
+            tempDouble *= 10;
+        }
+    }
+    
+
+    //if (max >= 10) {
+        tempDouble = max;
+        while ((int)tempDouble > 0) {
+            order += 1;
+            tempDouble /= 10;
+        }
+        order += multiplier;
+        tempInt = (int)(max / pow(10, order - 2)) * (int)pow(10, order - 2) * (int)pow(10, multiplier);
+        for (int i = 1; i <= 10; i++) {
+            if (((tempInt + i * (int)pow(10, order - 2)) % 5 == 0) && ((tempInt + i * (int)pow(10, order - 2)) % 10 == 0)) {
+                maxLevel = tempInt + i * (int)pow(10, order - 2);
+                break;
+            }
+        }
+    /*}
+    else {
+        int multiplier = 0;
+        tempDouble = max;
+        while (tempDouble < 10) {
+            multiplier += 1;
+            tempDouble *= 10;
+        }
+    }*/
+    maxLevel /= pow(10, multiplier);
 
     // Отрисовка осей координат
-    hpen = CreatePen(PS_SOLID, 2, RGB(100, 100, 100)); // серое перо толщиной в 3 пикселя
+    hpen = CreatePen(PS_SOLID, 3, RGB(100, 100, 100)); // серое перо толщиной в 3 пикселя
     SelectObject(hdc, hpen);
     line(hdc, 50, rectClient.bottom - 30, width, rectClient.bottom - 30); // рисование горизонтальной оси
     line(hdc, 50, rectClient.bottom - 30, 50, rectClient.top + 30); // рисование горизонтальной оси
+    DeleteObject(hpen); // удаление черного пера
+
+    hpen = CreatePen(PS_SOLID, 2, RGB(170, 170, 170)); // светло-серое перо толщиной в 2 пикселя
+    SelectObject(hdc, hpen);
+    for (int i = 1; i <= 5; i++)
+        line(hdc, 40, rectClient.bottom - 30 - i * interval, width, rectClient.bottom - 30 - i * interval);
+    DeleteObject(hpen); // удаление черного пера
 
     //for (int i = 0; i < 9; i++) line(hdc, i * 0.118 * width, OffsetY, i * 0.118 * width, OffsetY - 3);
-    
+
     //// отметки на горизонтальной оси
     //line(hdc, OffsetX + 10, 0, OffsetX + 10, height - 5); // рисование вертикальной оси line(hdc, OffsetX + 10, 0, OffsetX + 15, 10); // рисование правого вертикального оперения line(hdc, OffsetX + 10, 0, OffsetX + 5, 10); // рисование левого вертикального оперения
     //for (int i = -2; i < 3; i++) line(hdc, OffsetX + 10, OffsetY + height / 6 * i, OffsetX + 15, OffsetY + height / 6 * i);
     //// отметки на вертикальной оси
-    DeleteObject(hpen); // удаление черного пера
+    //DeleteObject(hpen); // удаление черного пера
 
-    //            // Отрисовка графика функции
-    //int color = 0xFF0000; // синее перо для первого ряда данных
-    ////TextOut(hdc, 21, 7, _T("Y = sin (X)"), 11); // Вывод текста y=sin(x) 8 символов
-    //TextOut(hdc, 27, height / 6 - 12, _T("1,0"), 3);
-    //TextOut(hdc, 27, height / 3 - 12, _T("0,5"), 3);
-    //TextOut(hdc, 27, 2 * height / 3 - 12, _T("-0,5"), 4);
-    //TextOut(hdc, 27, 5 * height / 6 - 12, _T("-1,0"), 4);
-    //TextOut(hdc, 15, 5 + 0.5 * height, _T("0,0"), 3);
-    //TextOut(hdc, 0.92 * width * 0.125, 5 + 0.5 * height, _T("0,78"), 4);
-    //TextOut(hdc, 0.92 * width * 0.25, 5 + 0.5 * height, _T("1,57"), 4);
-    //TextOut(hdc, 0.92 * width * 0.375, 5 + 0.5 * height, _T("2,35"), 4);
-    //TextOut(hdc, 0.92 * width * 0.5, 5 + 0.5 * height, _T("3,14"), 4);
-    //TextOut(hdc, 0.92 * width * 0.625, 5 + 0.5 * height, _T("3,92"), 4);
-    //TextOut(hdc, 0.92 * width * 0.75, 5 + 0.5 * height, _T("4,71"), 4);
-    //TextOut(hdc, 0.92 * width * 0.875, 5 + 0.5 * height, _T("5,49"), 4);
-    //TextOut(hdc, 0.92 * width, 5 + 0.5 * height, _T("6,28"), 4);
-    //TextOut(hdc, 0.98 * width, 5 + 0.5 * height, _T("x"), 1);
-    //for (int j = 1; j <= numrow; j++)
-    //{
-    //    //hpen = CreatePen(PS_SOLID, 3, color); // формирование пера толщиной 3 пикселя
-    //        while (1)
-    //        {
-    //            hpen = CreatePen(PS_SOLID, 3, color); // формирование пера толщиной 3 пикселя
-    //            SelectObject(hdc, hpen);
-    //            X = (int)(OffsetX + x[0][0] * ScaleX); // начальная точка графика
-    //            Y = (int)(OffsetY - x[j][0] * ScaleY);
-    //            MoveToEx(hdc, X + 10, Y, 0); // перемещение в начальную точку
-    //            for (int i = 0; i < (n - 3); i++)
-    //            {
-    //                X = OffsetX + 12 + x[0][i] * ScaleX;
-    //                Y = OffsetY - x[j][i] * ScaleY;
-    //                LineTo(hdc, X, Y);
-    //            }
-    //            //color = color >> 8; // изменение цвета пера для следующего ряда
-    //            DeleteObject(hpen); // удаление текущего пера
-    //            break;
-    //        }
-    //    color = color >> 8; // изменение цвета пера для следующего ряда
-    //    //DeleteObject(hpen); // удаление текущего пера
-    //}
+    
+
+
+
+    delete[] rationToMax;
+
 }
 
 void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
@@ -237,12 +262,14 @@ void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
 
 }
 
-int getHistogramData(double* arr)
+int getHistogramData(double* array)
 {
     wchar_t message[1024] = L"";
 
     bool error = false; //флаг ошибки данных
     int length; //длина текста в TextBox
+    
+    double* tempArr = new double[numHistTextBox];
 
     //OutputDebugString(L"GetHistogramData!\n");
     for (int i = 0; i < numHistTextBox; i++) {
@@ -266,6 +293,23 @@ int getHistogramData(double* arr)
             wcscat_s(message, 1024, numStr);
             wcscat_s(message, 1024, L"\n");
         }
+        else {
+            tempArr[i] = _wtof(buffer1);
+            if (tempArr[i] <= 0) {
+                error = true;
+                const wchar_t* str;
+                str = L"Значение меньше нуля:\tстрока ";
+                wchar_t numStr[10]; // буфер для числа
+                swprintf(numStr, sizeof(numStr) / sizeof(numStr[0]), L"%d", i + 1);
+                wcscat_s(message, 1024, str);
+                wcscat_s(message, 1024, numStr);
+                wcscat_s(message, 1024, L"\n");
+            }
+            //TCHAR str1[20];
+            //swprintf_s(str1, L"%lf", tempArr[i]);
+            //MessageBox(NULL, str1, L"", MB_OK);
+
+        }
         delete[] buffer1; //освобождаем память
 
         //проверяем наличие названий
@@ -285,12 +329,23 @@ int getHistogramData(double* arr)
         }
         delete[] buffer2; //освобождаем память
     }
-    if (error) {
+    if (error) { //если данные некорректны
         MessageBox(NULL, message, L"Ошибка", MB_ICONEXCLAMATION | MB_OK); // сообщение об ошибке
+        delete[] tempArr;
         return 1;
     }
-    else
+    else { // если данные корректны
+        //меняем массив
+        for (int i = 0; i < numHistTextBox; i++) {
+            array[i] = tempArr[i];
+
+            //TCHAR str1[20];
+            //swprintf_s(str1, L"N: %lf", array[i]);
+            //MessageBox(NULL, str1, L"", MB_OK);
+        }
+        delete[] tempArr;
         return 0;
+    }
 }
 
 bool containsLetters(TCHAR* str) {

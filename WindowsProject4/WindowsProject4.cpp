@@ -68,6 +68,8 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 void line(HDC hdc, int Xs, int Ys, int Xf, int Yf);
 //int p = 0;
 
+bool flagDrawHist = false;
+
 
 double** x; // массив данных для построения графиков
 double* HistData; // массив данных для построения гистограммы

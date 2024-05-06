@@ -6,6 +6,7 @@
 #include <cmath> // Для математических функций
 #include <tchar.h>
 #include <string>
+#include <cstdlib>
 
 #pragma comment(lib, "Comctl32.lib") // Подключаем Comctl32.lib
 
@@ -66,13 +67,14 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // рисование отрезка прямой линии
 
-void DrawHistogram(HDC hdc, RECT rectClient, double** x, int n, int numrow);
+void DrawHistogram(HDC hdc, RECT rectClient, double* array);
 void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient); // текст
 //void DrawHistogram(HWND hWnd);
 //void DrawPieChart(HWND hWnd);
 int getHistogramData(double* arr);
 bool containsLetters(TCHAR* str);
 //int p = 0;
+extern bool flagDrawHist;
 
 
 extern double** x; // массив данных, глобальный
