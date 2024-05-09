@@ -23,8 +23,9 @@ HWND hPieChartPage;
 LPCWSTR CheckBoxNames[3] = { L"y = cos(x)", L"y = πx / 10 - 1", L"y = sin(x)" };
 int CheckBoxIDs[3] = { 2001, 2002, 2003 };
 HWND CheckBox[3];
-
 int numHistTextBox = 3;
+
+int numColumns;
 //LPWSTR HistTextBoxTexts[5][2] = {
 //    {(LPWSTR)"1", (LPWSTR)"Text1"},
 //    {(LPWSTR)"2", (LPWSTR)"Text2"},
@@ -40,6 +41,8 @@ int HistTextBoxIDs[5][2] = {
     {3041, 3042}
 };
 HWND HistTextBox[5][2];
+
+TCHAR* HistText[5][2];
 
 HWND addButton;
 HWND deleteButton;
@@ -72,7 +75,14 @@ bool flagDrawHist = false;
 
 
 double** x; // массив данных для построения графиков
-double* HistData; // массив данных для построения гистограммы
+double* histData; // массив данных для построения гистограммы
+int colors[5] = {   RGB(204, 0, 0),
+                    RGB(255, 255, 0),
+                    RGB(51, 102, 0),
+                    RGB(0, 0, 255),
+                    RGB(153, 0, 153) };
+
+
 
 const int NUM = 70; // Примерное количество точек для графика
 
@@ -235,13 +245,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         tie.lParam = (LPARAM)hPieChartPage;
         TabCtrl_InsertItem(hTabControl, 2, &tie);
 
-        //ShowWindow(hGraphPage, SW_SHOW);
-        //ShowWindow(hHistogramPage, SW_HIDE);
-        //ShowWindow(hPieChartPage, SW_HIDE);
-
-        ShowWindow(hGraphPage, SW_HIDE);
-        ShowWindow(hHistogramPage, SW_SHOW);
+        ShowWindow(hGraphPage, SW_SHOW);
+        ShowWindow(hHistogramPage, SW_HIDE);
         ShowWindow(hPieChartPage, SW_HIDE);
+
+        /*ShowWindow(hGraphPage, SW_HIDE);
+        ShowWindow(hHistogramPage, SW_SHOW);
+        ShowWindow(hPieChartPage, SW_HIDE);*/
         break;
     }
     break;
@@ -286,6 +296,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     case WM_DESTROY:
         // Отменяем присвоение обработчика сообщений TabControl
+        delete[] histData;
         SetWindowLongPtr(hTabControl, GWLP_WNDPROC, (LONG_PTR)g_pTabCtrlProc);
         PostQuitMessage(0);
         break;

@@ -67,18 +67,22 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // рисование отрезка прямой линии
 
-void DrawHistogram(HDC hdc, RECT rectClient, double* array);
+void DrawHistogram(HDC hdc, RECT rectClient);
 void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient); // текст
 //void DrawHistogram(HWND hWnd);
 //void DrawPieChart(HWND hWnd);
-int getHistogramData(double* arr);
+int getHistogramData();
 bool containsLetters(TCHAR* str);
 //int p = 0;
 extern bool flagDrawHist;
 
+extern TCHAR* HistText[5][2];
+
 
 extern double** x; // массив данных, глобальный
-extern double* HistData; // массив данных, глобальный
+extern double* histData; // массив данных, глобальный
+extern int colors[5];
+extern int numColumns;
 
 extern const int NUM; // Примерное количество точек для графика
 

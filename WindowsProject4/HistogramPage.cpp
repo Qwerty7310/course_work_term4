@@ -7,7 +7,7 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
     //OutputDebugString(L"GraphPageProc 1\n");
     //PAINTSTRUCT ps;
     UINT state;
-
+    int length;
 
     RECT rectClient;
     GetClientRect(hHistogramPage, &rectClient);
@@ -26,10 +26,10 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
         FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW));
 
         //SetTextColor(hdc, 0x00FF0000); // синий цвет букв
-        if (flagDrawHist) DrawHistogram(hdc, ps.rcPaint, HistData); // построение графика
+        if (flagDrawHist) DrawHistogram(hdc, ps.rcPaint); // построение графика
         DrawTextOnHistogramPage(hWnd, hdc, ps.rcPaint); // текст
         EndPaint(hHistogramPage, &ps);
-        flagDrawHist = false;
+        //flagDrawHist = false;
         break;
     }
     break;
@@ -42,6 +42,7 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
             EnableWindow(deleteButton, TRUE);
             numHistTextBox += 1;
             if (numHistTextBox == 5) EnableWindow(addButton, FALSE);
+            //numColumns = numHistTextBox;
             InvalidateRect(hHistogramPage, NULL, TRUE);
             break;
 
@@ -51,18 +52,24 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
             DestroyWindow(HistTextBox[numHistTextBox - 1][1]);
             EnableWindow(addButton, TRUE);
             numHistTextBox -= 1;
+            //numColumns = numHistTextBox;
             if (numHistTextBox == 2) EnableWindow(deleteButton, FALSE);
             InvalidateRect(hHistogramPage, NULL, TRUE);
             break;
         case ID_CREATE_BUTTON:
-            //DrawHistogram(hdc, ps.rcPaint, x, NUM, 3); // построение графика
-            HistData = new double[numHistTextBox];
-            if (getHistogramData(HistData)) {
-                // в случае некорректных данных
-                delete[] HistData;
-            }
-            else {
+            if (!getHistogramData()) {
+                
                 OutputDebugString(L"HIST_InvalidateRect!\n");
+                //данные корректны
+
+                for (int i = 0; i < numHistTextBox; i++)
+                    for (int j = 0; j < 2; j++) {
+                        length = GetWindowTextLength(HistTextBox[i][j]); // Получить длину текста в текстовом поле
+                        HistText[i][j] = new TCHAR[length + 1];
+                        GetWindowText(HistTextBox[i][j], HistText[i][j], length + 1); // Получить текст из текстового поля
+                    }
+
+                numColumns = numHistTextBox;
                 flagDrawHist = true;
                 InvalidateRect(hHistogramPage, NULL, TRUE);
             }
@@ -82,7 +89,7 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 /*------------------------------ Функция рисования гистограммы ------------------------------*/
 
-void DrawHistogram(HDC hdc, RECT rectClient, double* array)
+void DrawHistogram(HDC hdc, RECT rectClient)
 {
     OutputDebugString(L"DrawHistogram!\n");
     SetBkMode(hdc, TRANSPARENT); // фон прозрачный
@@ -95,15 +102,11 @@ void DrawHistogram(HDC hdc, RECT rectClient, double* array)
 
     double sum = 0;
     max = -1; //инициализируем переменную для поиска максимума
-    for (int i = 0; i < numHistTextBox; i++) {
-        sum += array[i];
-        if (array[i] > max) max = array[i];
+    for (int i = 0; i < numColumns; i++) {
+        sum += histData[i];
+        if (histData[i] > max) max = histData[i];
     }
 
-    double* rationToMax = new double[numHistTextBox];
-    for (int i = 0; i < numHistTextBox; i++) {
-        rationToMax[i] = array[i] / max;
-    }
     int interval = (height - 20) / 5;
 
     //Получаем порядок числа
@@ -111,41 +114,48 @@ void DrawHistogram(HDC hdc, RECT rectClient, double* array)
     double tempDouble;
     double maxLevel = 0;
     int tempInt;
-
     int multiplier = 0;
-    if (max < 10) {
-        tempDouble = max;
-        while (tempDouble < 10) {
-            multiplier += 1;
-            tempDouble *= 10;
-        }
-    }
-    
 
-    //if (max >= 10) {
-        tempDouble = max;
+    tempDouble = max;
+    if (tempDouble >= 1)
         while ((int)tempDouble > 0) {
             order += 1;
             tempDouble /= 10;
         }
-        order += multiplier;
-        tempInt = (int)(max / pow(10, order - 2)) * (int)pow(10, order - 2) * (int)pow(10, multiplier);
-        for (int i = 1; i <= 10; i++) {
-            if (((tempInt + i * (int)pow(10, order - 2)) % 5 == 0) && ((tempInt + i * (int)pow(10, order - 2)) % 10 == 0)) {
-                maxLevel = tempInt + i * (int)pow(10, order - 2);
-                break;
-            }
-        }
-    /*}
-    else {
-        int multiplier = 0;
-        tempDouble = max;
-        while (tempDouble < 10) {
-            multiplier += 1;
+    else
+        while ((int)tempDouble < 1) {
+            order -= 1;
             tempDouble *= 10;
         }
-    }*/
-    maxLevel /= pow(10, multiplier);
+    if (order > 0)
+        tempInt = (int)(max / pow(10, order - 2)) * pow(10, order - 2);
+    else
+        tempInt = (int)(max / pow(10, order));
+
+    if (order == 1) {
+        order = 2;
+        tempInt *= 10;
+        multiplier = 1;
+    }
+
+    //считаем максимальную высоту гистограммы
+    for (int i = 0; i <= 10; i++) {
+        int a = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
+        int b = 5 * (int)pow(10, (order > 1) ? (order - 3) : 0);
+        int c = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
+        int d = (int)pow(10, (order > 1) ? (order) : (log10(5)));
+        if (
+            ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % (5 * (int)pow(10, (order > 2) ? (order - 3) : 0)) == 0) &&
+            ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % ((order > 1) ? 1 : 5) == 0) && //(int)pow(10, (order > 1) ? (1) : (log10(5)))
+            (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, multiplier))
+            ) {
+            maxLevel = tempInt + i * pow(10, (order > 1) ? (order - 2) : 0);
+            break;
+        }
+    }
+    if (order < 0) maxLevel *= pow(10, order);
+
+    if (multiplier) maxLevel /= 10;
 
     // Отрисовка осей координат
     hpen = CreatePen(PS_SOLID, 3, RGB(100, 100, 100)); // серое перо толщиной в 3 пикселя
@@ -160,20 +170,92 @@ void DrawHistogram(HDC hdc, RECT rectClient, double* array)
         line(hdc, 40, rectClient.bottom - 30 - i * interval, width, rectClient.bottom - 30 - i * interval);
     DeleteObject(hpen); // удаление черного пера
 
-    //for (int i = 0; i < 9; i++) line(hdc, i * 0.118 * width, OffsetY, i * 0.118 * width, OffsetY - 3);
+    //Создание числовой шкалы
+    for (int i = 0; i <= 5; i++) {
+        //Выбор шрифта
+        HFONT hFont = CreateFont(16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+            OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+            DEFAULT_PITCH | FF_SWISS, L"Arial");
 
-    //// отметки на горизонтальной оси
-    //line(hdc, OffsetX + 10, 0, OffsetX + 10, height - 5); // рисование вертикальной оси line(hdc, OffsetX + 10, 0, OffsetX + 15, 10); // рисование правого вертикального оперения line(hdc, OffsetX + 10, 0, OffsetX + 5, 10); // рисование левого вертикального оперения
-    //for (int i = -2; i < 3; i++) line(hdc, OffsetX + 10, OffsetY + height / 6 * i, OffsetX + 15, OffsetY + height / 6 * i);
-    //// отметки на вертикальной оси
-    //DeleteObject(hpen); // удаление черного пера
+        // черный цвет
+        SetTextColor(hdc, RGB(0, 0, 0));
+        SelectObject(hdc, hFont); // выбираем шрифт
+        SetBkMode(hdc, TRANSPARENT); // фон прозрачный
 
-    
+        RECT rectText = { 0, rectClient.bottom - 30 - i * interval - 10, 35, rectClient.bottom - 30 - i * interval + 10 };
 
+        TCHAR str1[20];
+        if ((i * maxLevel / 5) == (int)(i * maxLevel / 5))
+            swprintf_s(str1, L"%d", (int)(i * maxLevel / 5));
+        else
+            swprintf_s(str1, L"%.2lf", (i * maxLevel / 5));
 
+        DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_RIGHT);
+    }
 
-    delete[] rationToMax;
+    //Выбор шрифта
+    HFONT hFont = CreateFont(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+        DEFAULT_PITCH | FF_SWISS, L"Arial");
 
+    // черный цвет
+    SetTextColor(hdc, RGB(0, 0, 0));
+    SelectObject(hdc, hFont); // выбираем шрифт
+    SetBkMode(hdc, TRANSPARENT); // фон прозрачный
+
+    int length; //длина текстовой строки
+
+    //рисуем столбцы
+    int leftColumnX = rectClient.left + 75;
+    int rightColumnX = rectClient.left + width - 20;
+    int widthColumn = (rightColumnX - leftColumnX) / numColumns;
+    for (int i = 0; i < numColumns; i++) {
+        RECT r; //объявляем экзмепляр структуры RECT - координаты прямоугольника.
+        r.left = leftColumnX + i * widthColumn; //левый верхний угол
+        r.bottom = rectClient.bottom - 31;
+        r.top = r.bottom - (5. * interval * histData[i] / maxLevel);
+        r.right = leftColumnX + (i + 1) * widthColumn; //правый нижний
+        OutputDebugString(L"DrawColumns!\n");
+        //Заполняем прямоугольник
+        FillRect(hdc, &r, (HBRUSH)CreateSolidBrush(colors[i]));
+
+        //TCHAR* buffer;
+        //length = GetWindowTextLength(HistTextBox[i][0]); // Получить длину текста в текстовом поле
+        //buffer = new TCHAR[length + 1]; // Создать буфер для хранения текста
+        //GetWindowText(HistTextBox[i][0], buffer, length + 1); // Получить текст из текстового поля
+
+        RECT rectText;
+        rectText.left = r.left;
+        rectText.right = r.right;
+
+        rectText.top = r.top - 20;
+        rectText.bottom = r.top - 5;
+
+        DrawText(hdc, HistText[i][0], -1, &rectText, DT_WORDBREAK | DT_CENTER);
+    }
+
+    //добавляем подписи к стобцам
+    hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+        DEFAULT_PITCH | FF_SWISS, L"Arial");
+    SelectObject(hdc, hFont); // выбираем шрифт
+    for (int i = 0; i < numColumns; i++) {
+
+        //TCHAR* buffer;
+        //length = GetWindowTextLength(HistTextBox[i][1]); // Получить длину текста в текстовом поле
+        //buffer = new TCHAR[length + 1]; // Создать буфер для хранения текста
+        //GetWindowText(HistTextBox[i][1], buffer, length + 1); // Получить текст из текстового поля
+
+        RECT rectText;
+        rectText.left = leftColumnX + i * widthColumn; //левый верхний угол
+        rectText.top = rectClient.bottom - 20;
+        rectText.right = leftColumnX + (i + 1) * widthColumn; //правый нижний
+        rectText.bottom = rectText.top + 20;
+
+        DrawText(hdc, HistText[i][1], -1, &rectText, DT_WORDBREAK | DT_CENTER);
+
+        //delete[] buffer;
+    }
 }
 
 void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
@@ -262,7 +344,7 @@ void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
 
 }
 
-int getHistogramData(double* array)
+int getHistogramData()
 {
     wchar_t message[1024] = L"";
 
@@ -336,8 +418,10 @@ int getHistogramData(double* array)
     }
     else { // если данные корректны
         //меняем массив
+        delete[] histData; //удаляем старый
+        histData = new double[numHistTextBox]; //создаем новый
         for (int i = 0; i < numHistTextBox; i++) {
-            array[i] = tempArr[i];
+            histData[i] = tempArr[i];
 
             //TCHAR str1[20];
             //swprintf_s(str1, L"N: %lf", array[i]);
