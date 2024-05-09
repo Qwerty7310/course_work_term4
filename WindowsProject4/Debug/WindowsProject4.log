@@ -4,5 +4,5 @@ C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(2
 C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(95,17): warning C4101: max: неиспользованная локальная переменная
 C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(95,12): warning C4101: min: неиспользованная локальная переменная
 C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(203,9): warning C4101: length: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(456,55): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(457,55): warning C4244: =: преобразование "double" в "int", возможна потеря данных
   WindowsProject4.vcxproj -> C:\Users\daniil\source\repos\WindowsProject4\Debug\WindowsProject4.exe

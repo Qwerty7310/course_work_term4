@@ -426,6 +426,7 @@ int getHistogramData()
         }
         delete[] tempArr;
 
+        //находим высоту гистограммы
         double sum = 0;
         double max = -1; //инициализируем переменную дл€ поиска максимума
         for (int i = 0; i < numHistTextBox; i++) {
@@ -455,7 +456,7 @@ int getHistogramData()
         if (order > 0)
             tempInt = (int)(max / pow(10, order - 2)) * pow(10, order - 2);
         else
-            tempInt = (int)(max / pow(10, order));
+            tempInt = (int)(max * pow(10, -order));
 
         if (order == 1) {
             order = 2;
@@ -472,7 +473,8 @@ int getHistogramData()
             if (
                 ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % (5 * (int)pow(10, (order > 2) ? (order - 3) : 0)) == 0) &&
                 ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % ((order > 1) ? 1 : 5) == 0) && //(int)pow(10, (order > 1) ? (1) : (log10(5)))
-                (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, multiplier))
+                (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, multiplier)) &&
+                ((order > 0) || (order < 0) && (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, -order)))
                 ) {
                 maxLevel = tempInt + i * pow(10, (order > 1) ? (order - 2) : 0);
                 break;
@@ -488,7 +490,7 @@ int getHistogramData()
 
 bool containsLetters(TCHAR* str) {
     while (*str) {
-        if (_istalpha(*str)) {
+        if (_istalpha(*str) || *str == ',') {
             return true; // ≈сли найдена буква, возвращаем true
         }
         str++; // ѕереходим к следующему символу
