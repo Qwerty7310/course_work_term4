@@ -83,6 +83,7 @@ extern double** x; // массив данных, глобальный
 extern double* histData; // массив данных, глобальный
 extern int colors[5];
 extern int numColumns;
+extern double maxLevel;
 
 extern const int NUM; // Примерное количество точек для графика
 

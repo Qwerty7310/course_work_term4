@@ -91,71 +91,68 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 void DrawHistogram(HDC hdc, RECT rectClient)
 {
-    OutputDebugString(L"DrawHistogram!\n");
     SetBkMode(hdc, TRANSPARENT); // фон прозрачный
-    double OffsetY, OffsetX; double MAX_X, MAX_Y; double ScaleX, ScaleY;
     double min, max; int height, width;
-    int X, Y; // координаты в окне (в рх)
     HPEN hpen;
     height = rectClient.bottom - rectClient.top - 50;
     width = rectClient.right - rectClient.left - 270;
 
-    double sum = 0;
-    max = -1; //инициализируем переменную дл€ поиска максимума
-    for (int i = 0; i < numColumns; i++) {
-        sum += histData[i];
-        if (histData[i] > max) max = histData[i];
-    }
-
     int interval = (height - 20) / 5;
 
-    //ѕолучаем пор€док числа
-    int order = 0;
-    double tempDouble;
-    double maxLevel = 0;
-    int tempInt;
-    int multiplier = 0;
+    //double sum = 0;
+    //max = -1; //инициализируем переменную дл€ поиска максимума
+    //for (int i = 0; i < numColumns; i++) {
+    //    sum += histData[i];
+    //    if (histData[i] > max) max = histData[i];
+    //}
 
-    tempDouble = max;
-    if (tempDouble >= 1)
-        while ((int)tempDouble > 0) {
-            order += 1;
-            tempDouble /= 10;
-        }
-    else
-        while ((int)tempDouble < 1) {
-            order -= 1;
-            tempDouble *= 10;
-        }
-    if (order > 0)
-        tempInt = (int)(max / pow(10, order - 2)) * pow(10, order - 2);
-    else
-        tempInt = (int)(max / pow(10, order));
+    ////ѕолучаем пор€док числа
+    //int order = 0;
+    //double tempDouble;
+    //double maxLevel = 0;
+    //int tempInt;
+    //int multiplier = 0;
 
-    if (order == 1) {
-        order = 2;
-        tempInt *= 10;
-        multiplier = 1;
-    }
+    //tempDouble = max;
+    //if (tempDouble >= 1)
+    //    while ((int)tempDouble > 0) {
+    //        order += 1;
+    //        tempDouble /= 10;
+    //    }
+    //else
+    //    while ((int)tempDouble < 1) {
+    //        order -= 1;
+    //        tempDouble *= 10;
+    //    }
+    //if (order > 0)
+    //    tempInt = (int)(max / pow(10, order - 2)) * pow(10, order - 2);
+    //else
+    //    tempInt = (int)(max / pow(10, order));
 
-    //считаем максимальную высоту гистограммы
-    for (int i = 0; i <= 10; i++) {
-        int a = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
-        int b = 5 * (int)pow(10, (order > 1) ? (order - 3) : 0);
-        int c = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
-        int d = (int)pow(10, (order > 1) ? (order) : (log10(5)));
-        if (
-            ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % (5 * (int)pow(10, (order > 2) ? (order - 3) : 0)) == 0) &&
-            ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % ((order > 1) ? 1 : 5) == 0) && //(int)pow(10, (order > 1) ? (1) : (log10(5)))
-            (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, multiplier))
-            ) {
-            maxLevel = tempInt + i * pow(10, (order > 1) ? (order - 2) : 0);
-            break;
-        }
-    }
-    if (order < 0) maxLevel *= pow(10, order);
+    //if (order == 1) {
+    //    order = 2;
+    //    tempInt *= 10;
+    //    multiplier = 1;
+    //}
 
-    if (multiplier) maxLevel /= 10;
+    ////считаем максимальную высоту гистограммы
+    //for (int i = 0; i <= 10; i++) {
+    //    int a = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
+    //    int b = 5 * (int)pow(10, (order > 1) ? (order - 3) : 0);
+    //    int c = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
+    //    int d = (int)pow(10, (order > 1) ? (order) : (log10(5)));
+    //    if (
+    //        ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % (5 * (int)pow(10, (order > 2) ? (order - 3) : 0)) == 0) &&
+    //        ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % ((order > 1) ? 1 : 5) == 0) && //(int)pow(10, (order > 1) ? (1) : (log10(5)))
+    //        (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, multiplier))
+    //        ) {
+    //        maxLevel = tempInt + i * pow(10, (order > 1) ? (order - 2) : 0);
+    //        break;
+    //    }
+    //}
+    //if (order < 0) maxLevel *= pow(10, order);
+
+    //if (multiplier) maxLevel /= 10;
 
     // ќтрисовка осей координат
     hpen = CreatePen(PS_SOLID, 3, RGB(100, 100, 100)); // серое перо толщиной в 3 пиксел€
@@ -377,7 +374,7 @@ int getHistogramData()
         }
         else {
             tempArr[i] = _wtof(buffer1);
-            if (tempArr[i] <= 0) {
+            if (tempArr[i] < 0) {
                 error = true;
                 const wchar_t* str;
                 str = L"«начение меньше нул€:\tстрока ";
@@ -428,6 +425,63 @@ int getHistogramData()
             //MessageBox(NULL, str1, L"", MB_OK);
         }
         delete[] tempArr;
+
+        double sum = 0;
+        double max = -1; //инициализируем переменную дл€ поиска максимума
+        for (int i = 0; i < numHistTextBox; i++) {
+            sum += histData[i];
+            if (histData[i] > max) max = histData[i];
+        }
+
+        //ѕолучаем пор€док числа
+        maxLevel = 0;
+
+        int order = 0;
+        double tempDouble;
+        int tempInt;
+        int multiplier = 0;
+
+        tempDouble = max;
+        if (tempDouble >= 1)
+            while ((int)tempDouble > 0) {
+                order += 1;
+                tempDouble /= 10;
+            }
+        else
+            while ((int)tempDouble < 1) {
+                order -= 1;
+                tempDouble *= 10;
+            }
+        if (order > 0)
+            tempInt = (int)(max / pow(10, order - 2)) * pow(10, order - 2);
+        else
+            tempInt = (int)(max / pow(10, order));
+
+        if (order == 1) {
+            order = 2;
+            tempInt *= 10;
+            multiplier = 1;
+        }
+
+        //считаем максимальную высоту гистограммы
+        for (int i = 0; i <= 10; i++) {
+            int a = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
+            int b = 5 * (int)pow(10, (order > 1) ? (order - 3) : 0);
+            int c = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
+            int d = (int)pow(10, (order > 1) ? (order) : (log10(5)));
+            if (
+                ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % (5 * (int)pow(10, (order > 2) ? (order - 3) : 0)) == 0) &&
+                ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % ((order > 1) ? 1 : 5) == 0) && //(int)pow(10, (order > 1) ? (1) : (log10(5)))
+                (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, multiplier))
+                ) {
+                maxLevel = tempInt + i * pow(10, (order > 1) ? (order - 2) : 0);
+                break;
+            }
+        }
+        if (order < 0) maxLevel *= pow(10, order);
+
+        if (multiplier) maxLevel /= 10;
+
         return 0;
     }
 }

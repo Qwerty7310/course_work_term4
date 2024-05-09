@@ -25,7 +25,7 @@ int CheckBoxIDs[3] = { 2001, 2002, 2003 };
 HWND CheckBox[3];
 int numHistTextBox = 3;
 
-int numColumns;
+int numColumns = 3;
 //LPWSTR HistTextBoxTexts[5][2] = {
 //    {(LPWSTR)"1", (LPWSTR)"Text1"},
 //    {(LPWSTR)"2", (LPWSTR)"Text2"},
@@ -72,6 +72,7 @@ void line(HDC hdc, int Xs, int Ys, int Xf, int Yf);
 //int p = 0;
 
 bool flagDrawHist = false;
+double maxLevel;
 
 
 double** x; // массив данных для построения графиков
