@@ -185,7 +185,7 @@ void DrawHistogram(HDC hdc, RECT rectClient)
         if ((i * maxLevel / 5) == (int)(i * maxLevel / 5))
             swprintf_s(str1, L"%d", (int)(i * maxLevel / 5));
         else
-            swprintf_s(str1, L"%.2lf", (i * maxLevel / 5));
+            swprintf_s(str1, L"%.0lf", (i * maxLevel / 5));
 
         DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_RIGHT);
     }
@@ -228,7 +228,15 @@ void DrawHistogram(HDC hdc, RECT rectClient)
         rectText.top = r.top - 20;
         rectText.bottom = r.top - 5;
 
-        DrawText(hdc, HistText[i][0], -1, &rectText, DT_WORDBREAK | DT_CENTER);
+        wchar_t numStr[10]; // буфер для числа
+        //swprintf(numStr, sizeof(numStr) / sizeof(numStr[0]), L"%d", histData[i]);
+
+        if (histData[i] == (int)histData[i])
+            swprintf_s(numStr, L"%d", (int)histData[i]);
+        else
+            swprintf_s(numStr, L"%.2lf", histData[i]);
+        //DrawText(hdc, HistText[i][0], -1, &rectText, DT_WORDBREAK | DT_CENTER);
+        DrawText(hdc, numStr, -1, &rectText, DT_WORDBREAK | DT_CENTER);
     }
 
     //добавляем подписи к стобцам
@@ -490,7 +498,8 @@ int getHistogramData()
 
 bool containsLetters(TCHAR* str) {
     while (*str) {
-        if (_istalpha(*str) || *str == ',') {
+        //if (_istalpha(*str) || *str == ',') {
+        if ((*str < '0' || *str > '9') && (*str != '.')) {
             return true; // Если найдена буква, возвращаем true
         }
         str++; // Переходим к следующему символу
