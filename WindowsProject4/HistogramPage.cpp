@@ -2,6 +2,14 @@
 
 /*----------------------------------- Процедура окна -----------------------------------*/
 
+/**
+ *
+ * @param hWnd 
+ * @param message 
+ * @param wParam 
+ * @param lParam 
+ * @return 
+ */
 LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     //OutputDebugString(L"GraphPageProc 1\n");
@@ -18,12 +26,14 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
     {
         
         PAINTSTRUCT ps;
+
         HDC hdc = BeginPaint(hHistogramPage, &ps); // Используйте hdc, объявленный локально;
         //OutputDebugString(L"WM_HISTOGRAM_PAINT!\n");
 
         RECT rect;
         GetClientRect(hWnd, &rect);
         FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW));
+
 
         //SetTextColor(hdc, 0x00FF0000); // синий цвет букв
         if (flagDrawHist) DrawHistogram(hdc, ps.rcPaint); // построение графика
@@ -39,9 +49,9 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
         {
             // ID вашей кнопки "Добавить"
         case ID_ADD_BUTTON:
-            EnableWindow(deleteButton, TRUE);
+            EnableWindow(deleteButtonHist, TRUE);
             numHistTextBox += 1;
-            if (numHistTextBox == 5) EnableWindow(addButton, FALSE);
+            if (numHistTextBox == 5) EnableWindow(addButtonHist, FALSE);
             //numColumns = numHistTextBox;
             InvalidateRect(hHistogramPage, NULL, TRUE);
             break;
@@ -50,10 +60,10 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
         case ID_DELETE_BUTTON:
             DestroyWindow(HistTextBox[numHistTextBox - 1][0]);
             DestroyWindow(HistTextBox[numHistTextBox - 1][1]);
-            EnableWindow(addButton, TRUE);
+            EnableWindow(addButtonHist, TRUE);
             numHistTextBox -= 1;
             //numColumns = numHistTextBox;
-            if (numHistTextBox == 2) EnableWindow(deleteButton, FALSE);
+            if (numHistTextBox == 2) EnableWindow(deleteButtonHist, FALSE);
             InvalidateRect(hHistogramPage, NULL, TRUE);
             break;
         case ID_CREATE_BUTTON:
@@ -99,60 +109,7 @@ void DrawHistogram(HDC hdc, RECT rectClient)
 
     int interval = (height - 20) / 5;
 
-    //double sum = 0;
-    //max = -1; //инициализируем переменную для поиска максимума
-    //for (int i = 0; i < numColumns; i++) {
-    //    sum += histData[i];
-    //    if (histData[i] > max) max = histData[i];
-    //}
-
-    ////Получаем порядок числа
-    //int order = 0;
-    //double tempDouble;
-    //double maxLevel = 0;
-    //int tempInt;
-    //int multiplier = 0;
-
-    //tempDouble = max;
-    //if (tempDouble >= 1)
-    //    while ((int)tempDouble > 0) {
-    //        order += 1;
-    //        tempDouble /= 10;
-    //    }
-    //else
-    //    while ((int)tempDouble < 1) {
-    //        order -= 1;
-    //        tempDouble *= 10;
-    //    }
-    //if (order > 0)
-    //    tempInt = (int)(max / pow(10, order - 2)) * pow(10, order - 2);
-    //else
-    //    tempInt = (int)(max / pow(10, order));
-
-    //if (order == 1) {
-    //    order = 2;
-    //    tempInt *= 10;
-    //    multiplier = 1;
-    //}
-
-    ////считаем максимальную высоту гистограммы
-    //for (int i = 0; i <= 10; i++) {
-    //    int a = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
-    //    int b = 5 * (int)pow(10, (order > 1) ? (order - 3) : 0);
-    //    int c = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
-    //    int d = (int)pow(10, (order > 1) ? (order) : (log10(5)));
-    //    if (
-    //        ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % (5 * (int)pow(10, (order > 2) ? (order - 3) : 0)) == 0) &&
-    //        ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % ((order > 1) ? 1 : 5) == 0) && //(int)pow(10, (order > 1) ? (1) : (log10(5)))
-    //        (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, multiplier))
-    //        ) {
-    //        maxLevel = tempInt + i * pow(10, (order > 1) ? (order - 2) : 0);
-    //        break;
-    //    }
-    //}
-    //if (order < 0) maxLevel *= pow(10, order);
-
-    //if (multiplier) maxLevel /= 10;
+    //Отрисовка
 
     // Отрисовка осей координат
     hpen = CreatePen(PS_SOLID, 3, RGB(100, 100, 100)); // серое перо толщиной в 3 пикселя
@@ -216,11 +173,6 @@ void DrawHistogram(HDC hdc, RECT rectClient)
         //Заполняем прямоугольник
         FillRect(hdc, &r, (HBRUSH)CreateSolidBrush(colors[i]));
 
-        //TCHAR* buffer;
-        //length = GetWindowTextLength(HistTextBox[i][0]); // Получить длину текста в текстовом поле
-        //buffer = new TCHAR[length + 1]; // Создать буфер для хранения текста
-        //GetWindowText(HistTextBox[i][0], buffer, length + 1); // Получить текст из текстового поля
-
         RECT rectText;
         rectText.left = r.left;
         rectText.right = r.right;
@@ -229,13 +181,11 @@ void DrawHistogram(HDC hdc, RECT rectClient)
         rectText.bottom = r.top - 5;
 
         wchar_t numStr[10]; // буфер для числа
-        //swprintf(numStr, sizeof(numStr) / sizeof(numStr[0]), L"%d", histData[i]);
 
         if (histData[i] == (int)histData[i])
             swprintf_s(numStr, L"%d", (int)histData[i]);
         else
             swprintf_s(numStr, L"%.2lf", histData[i]);
-        //DrawText(hdc, HistText[i][0], -1, &rectText, DT_WORDBREAK | DT_CENTER);
         DrawText(hdc, numStr, -1, &rectText, DT_WORDBREAK | DT_CENTER);
     }
 
@@ -245,12 +195,6 @@ void DrawHistogram(HDC hdc, RECT rectClient)
         DEFAULT_PITCH | FF_SWISS, L"Arial");
     SelectObject(hdc, hFont); // выбираем шрифт
     for (int i = 0; i < numColumns; i++) {
-
-        //TCHAR* buffer;
-        //length = GetWindowTextLength(HistTextBox[i][1]); // Получить длину текста в текстовом поле
-        //buffer = new TCHAR[length + 1]; // Создать буфер для хранения текста
-        //GetWindowText(HistTextBox[i][1], buffer, length + 1); // Получить текст из текстового поля
-
         RECT rectText;
         rectText.left = leftColumnX + i * widthColumn; //левый верхний угол
         rectText.top = rectClient.bottom - 20;
@@ -258,8 +202,6 @@ void DrawHistogram(HDC hdc, RECT rectClient)
         rectText.bottom = rectText.top + 20;
 
         DrawText(hdc, HistText[i][1], -1, &rectText, DT_WORDBREAK | DT_CENTER);
-
-        //delete[] buffer;
     }
 }
 
@@ -270,10 +212,8 @@ void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
     RECT rectText;
     HFONT hFont;
     BOOL isEnabled = TRUE;
-
     int length;
     
-
     //Создание надписи
     hFont = CreateFont(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
         OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
@@ -286,20 +226,6 @@ void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
 
     rectText = { rectClient.right - 236, 10, rectClient.right, rectClient.bottom };
     DrawText(hdc, L"Значение             Название", -1, &rectText, DT_WORDBREAK);
-
-    //HWND sortExInp = CreateWindowEx(NULL, L"Edit", L"", WS_CHILD | WS_VISIBLE | WS_BORDER, rectClient.right - 233, 40, 60, 20,
-    //    hWnd, nullptr, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), nullptr);
-    //HWND sortExInp1 = CreateWindowEx(NULL, L"Edit", L"", WS_CHILD | WS_VISIBLE | WS_BORDER, rectClient.right - 160, 40, 160, 20,
-    //    hWnd, nullptr, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), nullptr);
-
-    //
-    //int length = GetWindowTextLength(sortExInp); // Получить длину текста в текстовом поле
-    //TCHAR* buffer = new TCHAR[length + 1]; // Создать буфер для хранения текста
-    //GetWindowText(sortExInp, buffer, length + 1); // Получить текст из текстового поля
-
-    //delete[] buffer;
-
-    //GetWindowText(sortExInp, word, 11);
 
     for (int i = 0; i < numHistTextBox; i++) {
         TCHAR* buffer;
@@ -324,22 +250,22 @@ void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
     }
 
 
-    if (addButton) isEnabled = IsWindowEnabled(addButton);
-    if (addButton) DestroyWindow(addButton); //Удаление, чтобы заново нарисовать в другом месте
-    addButton = CreateWindow(L"Button", L"Добавить", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 220, 40 + numHistTextBox * 30, 100, 25, hWnd,
+    if (addButtonHist) isEnabled = IsWindowEnabled(addButtonHist);
+    if (addButtonHist) DestroyWindow(addButtonHist); //Удаление, чтобы заново нарисовать в другом месте
+    addButtonHist = CreateWindow(L"Button", L"Добавить", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 220, 40 + numHistTextBox * 30, 100, 25, hWnd,
         (HMENU)ID_ADD_BUTTON, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
         nullptr);
-    EnableWindow(addButton, isEnabled);
+    EnableWindow(addButtonHist, isEnabled);
 
-    if (deleteButton) isEnabled = IsWindowEnabled(deleteButton);
-    if (deleteButton) DestroyWindow(deleteButton); //Удаление, чтобы заново нарисовать в другом месте
-    deleteButton = CreateWindow(L"Button", L"Убрать", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 110, 40 + numHistTextBox * 30, 100, 25, hWnd,
+    if (deleteButtonHist) isEnabled = IsWindowEnabled(deleteButtonHist);
+    if (deleteButtonHist) DestroyWindow(deleteButtonHist); //Удаление, чтобы заново нарисовать в другом месте
+    deleteButtonHist = CreateWindow(L"Button", L"Убрать", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 110, 40 + numHistTextBox * 30, 100, 25, hWnd,
         (HMENU)ID_DELETE_BUTTON, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
         nullptr);
-    EnableWindow(deleteButton, isEnabled);
+    EnableWindow(deleteButtonHist, isEnabled);
 
-    if (createButton) DestroyWindow(createButton); //Удаление, чтобы заново нарисовать в другом месте
-    createButton = CreateWindow(L"Button", L"Построить", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 220, 40 + (numHistTextBox + 1) * 30, 210, 25, hWnd,
+    if (createButtonHist) DestroyWindow(createButtonHist); //Удаление, чтобы заново нарисовать в другом месте
+    createButtonHist = CreateWindow(L"Button", L"Построить", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 220, 40 + (numHistTextBox + 1) * 30, 210, 25, hWnd,
         (HMENU)ID_CREATE_BUTTON, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
         nullptr);
 
@@ -427,10 +353,6 @@ int getHistogramData()
         histData = new double[numHistTextBox]; //создаем новый
         for (int i = 0; i < numHistTextBox; i++) {
             histData[i] = tempArr[i];
-
-            //TCHAR str1[20];
-            //swprintf_s(str1, L"N: %lf", array[i]);
-            //MessageBox(NULL, str1, L"", MB_OK);
         }
         delete[] tempArr;
 
@@ -441,68 +363,62 @@ int getHistogramData()
             sum += histData[i];
             if (histData[i] > max) max = histData[i];
         }
-
-        //Получаем порядок числа
-        maxLevel = 0;
-
-        int order = 0;
-        double tempDouble;
-        int tempInt;
-        int multiplier = 0;
-
-        tempDouble = max;
-        if (tempDouble >= 1)
-            while ((int)tempDouble > 0) {
-                order += 1;
-                tempDouble /= 10;
-            }
-        else
-            while ((int)tempDouble < 1) {
-                order -= 1;
-                tempDouble *= 10;
-            }
-        if (order > 0)
-            tempInt = (int)(max / pow(10, order - 2)) * pow(10, order - 2);
-        else
-            tempInt = (int)(max * pow(10, -order));
-
-        if (order == 1) {
-            order = 2;
-            tempInt *= 10;
-            multiplier = 1;
+        if (max == 0) {
+            MessageBox(NULL, L"Должно быть хотя бы 1 положительное число!", L"Ошибка", MB_ICONEXCLAMATION | MB_OK); // сообщение об ошибке
+            return 1;
         }
+        else {
+            //Получаем порядок числа
+            maxLevel = 0;
 
-        //считаем максимальную высоту гистограммы
-        for (int i = 0; i <= 10; i++) {
-            int a = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
-            int b = 5 * (int)pow(10, (order > 1) ? (order - 3) : 0);
-            int c = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
-            int d = (int)pow(10, (order > 1) ? (order) : (log10(5)));
-            if (
-                ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % (5 * (int)pow(10, (order > 2) ? (order - 3) : 0)) == 0) &&
-                ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % ((order > 1) ? 1 : 5) == 0) && //(int)pow(10, (order > 1) ? (1) : (log10(5)))
-                (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, multiplier)) &&
-                ((order > 0) || (order < 0) && (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, -order)))
-                ) {
-                maxLevel = tempInt + i * pow(10, (order > 1) ? (order - 2) : 0);
-                break;
+            int order = 0;
+            double tempDouble;
+            int tempInt;
+            int multiplier = 0;
+
+            tempDouble = max;
+            if (tempDouble >= 1)
+                while ((int)tempDouble > 0) {
+                    order += 1;
+                    tempDouble /= 10;
+                }
+            else
+                while ((int)tempDouble < 1) {
+                    order -= 1;
+                    tempDouble *= 10;
+                }
+            if (order > 0)
+                tempInt = (int)(max / pow(10, order - 2)) * pow(10, order - 2);
+            else
+                tempInt = (int)(max * pow(10, -order));
+
+            if (order == 1) {
+                order = 2;
+                tempInt *= 10;
+                multiplier = 1;
             }
+
+            //считаем максимальную высоту гистограммы
+            for (int i = 0; i <= 10; i++) {
+                int a = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
+                int b = 5 * (int)pow(10, (order > 1) ? (order - 3) : 0);
+                int c = tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0);
+                int d = (int)pow(10, (order > 1) ? (order) : (log10(5)));
+                if (
+                    ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % (5 * (int)pow(10, (order > 2) ? (order - 3) : 0)) == 0) &&
+                    ((tempInt + i * (int)pow(10, (order > 1) ? (order - 2) : 0)) % ((order > 1) ? 1 : 5) == 0) && //(int)pow(10, (order > 1) ? (1) : (log10(5)))
+                    (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, multiplier)) &&
+                    ((order > 0) || (order < 0) && (tempInt + i * pow(10, (order > 1) ? (order - 2) : 0) >= max * pow(10, -order)))
+                    ) {
+                    maxLevel = tempInt + i * pow(10, (order > 1) ? (order - 2) : 0);
+                    break;
+                }
+            }
+            if (order < 0) maxLevel *= pow(10, order);
+
+            if (multiplier) maxLevel /= 10;
+
+            return 0;
         }
-        if (order < 0) maxLevel *= pow(10, order);
-
-        if (multiplier) maxLevel /= 10;
-
-        return 0;
     }
-}
-
-bool containsLetters(TCHAR* str) {
-    while (*str) {
-        //if (_istalpha(*str) || *str == ',') {
-        if ((*str < '0' || *str > '9') && (*str != '.')) {
-            return true; // Если найдена буква, возвращаем true
-        }
-        str++; // Переходим к следующему символу
-    }
-    return false; // Если не найдено ни одной буквы, возвращаем false
 }

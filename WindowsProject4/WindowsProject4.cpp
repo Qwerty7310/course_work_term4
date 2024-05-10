@@ -2,37 +2,30 @@
 
 #include "GraphPage.h"
 #include "HistogramPage.h"
-
-//#include <windows.h>
-//#include <CommCtrl.h> // Для использования элемента управления TabControl
-//#include <vector> // Для работы с данными для графиков и диаграмм
-//#include <cmath> // Для математических функций
-//#include <tchar.h>
-
-//#pragma comment(lib, "Comctl32.lib") // Подключаем Comctl32.lib
-
-#define IDC_TABCONTROL 1001 // Примерный номер идентификатора для TabControl
+#include "PieChartPage.h"
 
 // Глобальные переменные
 HINSTANCE hInst;
+
 HWND hTabControl;
 HWND hGraphPage;
 HWND hHistogramPage;
 HWND hPieChartPage;
 
+WNDPROC g_pTabCtrlProc = nullptr; // Объявление и инициализация указателя
+WNDPROC g_pGraphPageProc = nullptr; // Объявление и инициализация указателя
+WNDPROC g_pHistogramPageProc = nullptr; // Объявление и инициализация указателя
+WNDPROC g_pPieChartPageProc = nullptr; // Объявление и инициализация указателя
+
+//Для построения графиков
 LPCWSTR CheckBoxNames[3] = { L"y = cos(x)", L"y = πx / 10 - 1", L"y = sin(x)" };
 int CheckBoxIDs[3] = { 2001, 2002, 2003 };
 HWND CheckBox[3];
-int numHistTextBox = 3;
+const int NUM = 70; // Примерное количество точек для графика
+double** x; // массив данных для построения графиков
 
-int numColumns = 3;
-//LPWSTR HistTextBoxTexts[5][2] = {
-//    {(LPWSTR)"1", (LPWSTR)"Text1"},
-//    {(LPWSTR)"2", (LPWSTR)"Text2"},
-//    {(LPWSTR)"3", (LPWSTR)"Text3"},
-//    {(LPWSTR)"4", (LPWSTR)"Text4"},
-//    {(LPWSTR)"5", (LPWSTR)"Text5"}
-//};
+//Для построения гистограммы
+int numHistTextBox = 3;
 int HistTextBoxIDs[5][2] = {
     {3001, 3002},
     {3011, 3012},
@@ -40,18 +33,38 @@ int HistTextBoxIDs[5][2] = {
     {3031, 3032},
     {3041, 3042}
 };
+int numColumns = 3;
 HWND HistTextBox[5][2];
-
 TCHAR* HistText[5][2];
 
-HWND addButton;
-HWND deleteButton;
-HWND createButton;
+HWND addButtonHist;
+HWND deleteButtonHist;
+HWND createButtonHist;
 
-WNDPROC g_pTabCtrlProc = nullptr; // Объявление и инициализация указателя
-WNDPROC g_pGraphPageProc = nullptr; // Объявление и инициализация указателя
-WNDPROC g_pHistogramPageProc = nullptr; // Объявление и инициализация указателя
-WNDPROC g_pPieChartPageProc = nullptr; // Объявление и инициализация указателя
+bool flagDrawHist = false;
+double maxLevel;
+double* histData; // массив данных для построения гистограммы
+
+//Для построения круговой диаграммы
+int numPieTextBox = 3;
+int pieTextBoxIDs[5][2] = {
+    {3001, 3002},
+    {3011, 3012},
+    {3021, 3022},
+    {3031, 3032},
+    {3041, 3042}
+};
+int numSectors = 3;
+HWND pieTextBox[5][2];
+TCHAR* pieText[5][2];
+
+HWND addButtonPie;
+HWND deleteButtonPie;
+HWND createButtonPie;
+
+bool flagDrawPie = false;
+double* pieData; // массив данных для построения гистограммы
+
 
 // Прототипы функций
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
@@ -69,25 +82,19 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 //void DrawPieChart(HWND hWnd);
 //double** getData(int size);
 void line(HDC hdc, int Xs, int Ys, int Xf, int Yf);
-//int p = 0;
-
-bool flagDrawHist = false;
-double maxLevel;
+bool containsLetters(TCHAR* str);
 
 
-double** x; // массив данных для построения графиков
-double* histData; // массив данных для построения гистограммы
+
+
+
+
 int colors[5] = {   RGB(204, 0, 0),
                     RGB(255, 255, 0),
                     RGB(51, 102, 0),
                     RGB(0, 0, 255),
                     RGB(153, 0, 153) };
 
-
-
-const int NUM = 70; // Примерное количество точек для графика
-
-//HDC hdc;
 
 // Функция WinMain
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -203,7 +210,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         // Создаем элемент управления TabControl
         hTabControl = CreateWindow(WC_TABCONTROL, L"", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-            10, 30, 760, 540, hWnd, (HMENU)IDC_TABCONTROL, hInst, NULL);
+            10, 30, 760, 540, hWnd, NULL, hInst, NULL);
 
         // Создаем дочерние окна для каждой вкладки
         hGraphPage = CreateWindow(WC_STATIC, L"", WS_CHILD | WS_VISIBLE,
@@ -314,39 +321,13 @@ void line(HDC hdc, int Xs, int Ys, int Xf, int Yf) // рисование отр�
     LineTo(hdc, Xf, Yf); // в точку (Xt, Yf)
 }
 
-
-/****************************************************************************************
- *                                 Вкладка PieChartPage                                 *
- ****************************************************************************************/
-
- //Процедура окна
-LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    //OutputDebugString(L"PieChartPageProc 1\n");
-    switch (message)
-    {
-    case WM_PAINT:
-    {
-        //OutputDebugString(L"PieChartPageProc 2 !!!!!!!!!!\n");
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hWnd, &ps);
-        RECT r; //объявляем экзмепляр структуры RECT - координаты прямоугольника.
-        r.left = 0; //левый верхний угол
-        r.top = 0;
-        r.right = 300; //правый нижний
-        r.bottom = 400;
-
-        //Заполняем прямоугольник
-        FillRect(hdc, &r, (HBRUSH)CreateSolidBrush(RGB(0, 100, 50)));
-        EndPaint(hWnd, &ps);
-        break;
+bool containsLetters(TCHAR* str) {
+    while (*str) {
+        //if (_istalpha(*str) || *str == ',') {
+        if ((*str < '0' || *str > '9') && (*str != '.')) {
+            return true; // Если найдена буква, возвращаем true
+        }
+        str++; // Переходим к следующему символу
     }
-    //default:
-    //    return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-
-    if (g_pPieChartPageProc)
-        return CallWindowProc(g_pPieChartPageProc, hWnd, message, wParam, lParam);
-    else
-        return DefWindowProc(hWnd, message, wParam, lParam);
+    return false; // Если не найдено ни одной буквы, возвращаем false
 }

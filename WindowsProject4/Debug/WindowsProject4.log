@@ -1,8 +1,29 @@
-﻿  HistogramPage.cpp
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(9,10): warning C4101: state: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(213,26): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(95,17): warning C4101: max: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(95,12): warning C4101: min: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(203,9): warning C4101: length: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(465,55): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+﻿  PieChartPage.cpp
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(8,10): warning C4101: state: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(107,17): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(108,17): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(124,61): warning C4244: аргумент: преобразование "double" в "FLOAT", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(124,49): warning C4244: аргумент: преобразование "double" в "FLOAT", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(124,41): warning C4244: аргумент: преобразование "double" в "DWORD", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(130,19): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(131,19): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(133,31): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(134,32): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(135,30): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(136,33): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(144,28): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(152,21): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(153,21): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(154,22): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(155,22): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(157,49): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(159,28): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(165,38): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(166,39): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(169,38): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(170,39): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(172,33): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(94,10): warning C4101: hpen: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(93,17): warning C4101: max: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\PieChartPage.cpp(93,12): warning C4101: min: неиспользованная локальная переменная
   WindowsProject4.vcxproj -> C:\Users\daniil\source\repos\WindowsProject4\Debug\WindowsProject4.exe

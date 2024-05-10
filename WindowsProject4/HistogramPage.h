@@ -44,9 +44,9 @@ extern WNDPROC g_pGraphPageProc; // Объявление и инициализа
 extern WNDPROC g_pHistogramPageProc; // Объявление и инициализация указателя
 extern WNDPROC g_pPieChartPageProc; // Объявление и инициализация указателя
 
-extern HWND addButton;
-extern HWND deleteButton;
-extern HWND createButton;
+extern HWND addButtonHist;
+extern HWND deleteButtonHist;
+extern HWND createButtonHist;
 
 // Прототипы функций
 //BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);

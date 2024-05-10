@@ -142,6 +142,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphPage.h" />
     <ClInclude Include="HistogramPage.h" />
+    <ClInclude Include="PieChartPage.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="WindowsProject4.h" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="GraphPage.cpp" />
     <ClCompile Include="HistogramPage.cpp" />
+    <ClCompile Include="PieChartPage.cpp" />
     <ClCompile Include="WindowsProject4.cpp" />
   </ItemGroup>
   <ItemGroup>
