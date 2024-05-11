@@ -1,15 +1,5 @@
 #include "HistogramPage.h"
 
-/*----------------------------------- Процедура окна -----------------------------------*/
-
-/**
- *
- * @param hWnd 
- * @param message 
- * @param wParam 
- * @param lParam 
- * @return 
- */
 LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     //OutputDebugString(L"GraphPageProc 1\n");
@@ -96,8 +86,6 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
     else
         return DefWindowProc(hWnd, message, wParam, lParam);
 }
-
-/*------------------------------ Функция рисования гистограммы ------------------------------*/
 
 void DrawHistogram(HDC hdc, RECT rectClient)
 {
@@ -206,9 +194,6 @@ void DrawHistogram(HDC hdc, RECT rectClient)
 }
 
 void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
-
-    //LPTSTR word = (LPTSTR)"1111111111";
-    //OutputDebugString(L"DrawTextOnHistogramPage!\n");
     RECT rectText;
     HFONT hFont;
     BOOL isEnabled = TRUE;
@@ -249,7 +234,6 @@ void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
         delete[] buffer;
     }
 
-
     if (addButtonHist) isEnabled = IsWindowEnabled(addButtonHist);
     if (addButtonHist) DestroyWindow(addButtonHist); //Удаление, чтобы заново нарисовать в другом месте
     addButtonHist = CreateWindow(L"Button", L"Добавить", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 220, 40 + numHistTextBox * 30, 100, 25, hWnd,
@@ -269,10 +253,7 @@ void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient) {
         (HMENU)ID_CREATE_BUTTON, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
         nullptr);
 
-    // Освобождение шрифта
-    DeleteObject(hFont);
-    
-
+    DeleteObject(hFont); // Освобождение шрифта
 }
 
 int getHistogramData()
@@ -318,10 +299,6 @@ int getHistogramData()
                 wcscat_s(message, 1024, numStr);
                 wcscat_s(message, 1024, L"\n");
             }
-            //TCHAR str1[20];
-            //swprintf_s(str1, L"%lf", tempArr[i]);
-            //MessageBox(NULL, str1, L"", MB_OK);
-
         }
         delete[] buffer1; //освобождаем память
 
@@ -367,14 +344,13 @@ int getHistogramData()
             MessageBox(NULL, L"Должно быть хотя бы 1 положительное число!", L"Ошибка", MB_ICONEXCLAMATION | MB_OK); // сообщение об ошибке
             return 1;
         }
-        else {
-            //Получаем порядок числа
-            maxLevel = 0;
+        else { //Находим максимальный уровень гистограммы
+            maxLevel = 0; //максимальный уровень
 
-            int order = 0;
+            int order = 0; //порядок числа
             double tempDouble;
             int tempInt;
-            int multiplier = 0;
+            int multiplier = 0; //множитель
 
             tempDouble = max;
             if (tempDouble >= 1)

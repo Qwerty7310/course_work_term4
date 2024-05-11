@@ -29,13 +29,9 @@
 
 // Глобальные переменные
 extern HINSTANCE hInst;
-//extern HWND hTabControl;
-//extern HWND hGraphPage;
 extern HWND hHistogramPage;
-//extern HWND hPieChartPage;
 
 extern int numHistTextBox;
-//extern LPWSTR HistTextBoxTexts[5][2];
 extern int HistTextBoxIDs[5][2];
 extern HWND HistTextBox[5][2];
 
@@ -49,42 +45,16 @@ extern HWND deleteButtonHist;
 extern HWND createButtonHist;
 
 // Прототипы функций
-//BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
-//LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-//LRESULT CALLBACK TabControlProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-/// <summary>
-/// Процедура окна
-/// </summary>
-/// <param name="hWnd"></param>
-/// <param name="message"></param>
-/// <param name="wParam"></param>
-/// <param name="lParam"></param>
-/// <returns></returns>
-//LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-//LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
 void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // рисование отрезка прямой линии
-
 void DrawHistogram(HDC hdc, RECT rectClient);
 void DrawTextOnHistogramPage(HWND hWnd, HDC hdc, RECT rectClient); // текст
-//void DrawHistogram(HWND hWnd);
-//void DrawPieChart(HWND hWnd);
 int getHistogramData();
 bool containsLetters(TCHAR* str);
-//int p = 0;
+
 extern bool flagDrawHist;
-
 extern TCHAR* HistText[5][2];
-
-
-extern double** x; // массив данных, глобальный
 extern double* histData; // массив данных, глобальный
 extern int colors[5];
 extern int numColumns;
 extern double maxLevel;
-
-extern const int NUM; // Примерное количество точек для графика
-
-//extern HDC hdc;

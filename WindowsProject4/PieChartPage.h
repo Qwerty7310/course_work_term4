@@ -27,7 +27,6 @@
 #define ID_DELETE_BUTTON_2 6002
 #define ID_CREATE_BUTTON_2 6003
 
-//extern WNDPROC g_pTabCtrlProc; // Объявление и инициализация указателя
 extern WNDPROC g_pGraphPageProc; // Объявление и инициализация указателя
 extern WNDPROC g_pHistogramPageProc; // Объявление и инициализация указателя
 extern WNDPROC g_pPieChartPageProc; // Объявление и инициализация указателя
@@ -48,23 +47,13 @@ extern HWND createButtonPie;
 
 // Прототипы функций
 LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
 void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // рисование отрезка прямой линии
-
 void DrawPieChart(HDC hdc, RECT rectClient);
 void DrawTextOnPieChartPage(HWND hWnd, HDC hdc, RECT rectClient); // текст
-//void DrawHistogram(HWND hWnd);
-//void DrawPieChart(HWND hWnd);
 int getPieChartData();
 bool containsLetters(TCHAR* str);
-//int p = 0;
 extern bool flagDrawPie;
 
 extern TCHAR* pieText[5][2];
-
 extern double* pieData; // массив данных, глобальный
 extern int colors[5];
-
-extern const int NUM; // Примерное количество точек для графика
-
-//extern HDC hdc;

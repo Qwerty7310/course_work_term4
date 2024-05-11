@@ -1,10 +1,7 @@
 #include "PieChartPage.h"
 
-/*----------------------------------- Процедура окна -----------------------------------*/
 LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    //OutputDebugString(L"GraphPageProc 1\n");
-    //PAINTSTRUCT ps;
     UINT state;
     int length;
 
@@ -19,19 +16,14 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
         PAINTSTRUCT ps;
 
         HDC hdc = BeginPaint(hPieChartPage, &ps); // Используйте hdc, объявленный локально;
-        //OutputDebugString(L"WM_HISTOGRAM_PAINT!\n");
 
         RECT rect;
         GetClientRect(hWnd, &rect);
         FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW));
 
-
-        //SetTextColor(hdc, 0x00FF0000); // синий цвет букв
         if (flagDrawPie) DrawPieChart(hdc, ps.rcPaint); // построение графика
-        //DrawPieChart(hdc, ps.rcPaint); // построение графика
         DrawTextOnPieChartPage(hWnd, hdc, ps.rcPaint); // текст
         EndPaint(hPieChartPage, &ps);
-        //flagDrawHist = false;
         break;
     }
     break;
@@ -44,17 +36,13 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
             EnableWindow(deleteButtonPie, TRUE);
             numPieTextBox += 1;
             if (numPieTextBox == 5) EnableWindow(addButtonPie, FALSE);
-            //numColumns = numHistTextBox;
             InvalidateRect(hPieChartPage, NULL, TRUE);
             break;
-
-            // ID вашей кнопки "Убрать"
         case ID_DELETE_BUTTON_2:
             DestroyWindow(pieTextBox[numPieTextBox - 1][0]);
             DestroyWindow(pieTextBox[numPieTextBox - 1][1]);
             EnableWindow(addButtonPie, TRUE);
             numPieTextBox -= 1;
-            //numColumns = numHistTextBox;
             if (numPieTextBox == 2) EnableWindow(deleteButtonPie, FALSE);
             InvalidateRect(hPieChartPage, NULL, TRUE);
             break;
@@ -85,11 +73,8 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
         return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-/*------------------------------ Функция рисования круговой диаграммы  ------------------------------*/
-
 void DrawPieChart(HDC hdc, RECT rectClient)
 {
-    //SetBkMode(hdc, TRANSPARENT); // фон прозрачный
     double min, max; int height, width;
     HPEN hpen;
     height = rectClient.bottom - rectClient.top - 50;
@@ -99,8 +84,6 @@ void DrawPieChart(HDC hdc, RECT rectClient)
     HFONT hFont;
     // черный цвет
     SetTextColor(hdc, RGB(0, 0, 0));
-    
-    //SetBkMode(hdc, RGB(100, 100, 100)); // фон прозрачный
 
     //Положение центра диаграммы и ее радиус
     //int xCenter = (rectClient.bottom + rectClient.top) / 2;
@@ -113,10 +96,6 @@ void DrawPieChart(HDC hdc, RECT rectClient)
     for (int i = 0; i < numSectors; i++) {
         startAngle += sweepAngl;
         sweepAngl = pieData[i + 1] / pieData[0] * 360;
-        /*if (i != numSectors - 1)
-            sweepAngl = pieData[i + 1] / pieData[0] * 360;
-        else
-            sweepAngl = 360 - startAngle + 90;*/
 
         BeginPath(hdc);
         SelectObject(hdc, (HBRUSH)CreateSolidBrush(colors[i]));
@@ -173,21 +152,13 @@ void DrawPieChart(HDC hdc, RECT rectClient)
         rectText.bottom = yFinLine;
         DrawText(hdc, pieText[i][1], -1, &rectText, DT_WORDBREAK | ((xFinLine < xCenter) ? DT_RIGHT : DT_LEFT));
     }
-
-    
-
 }
 
 void DrawTextOnPieChartPage(HWND hWnd, HDC hdc, RECT rectClient) {
-
-    //LPTSTR word = (LPTSTR)"1111111111";
-    //OutputDebugString(L"DrawTextOnHistogramPage!\n");
     RECT rectText;
     HFONT hFont;
     BOOL isEnabled = TRUE;
-
     int length;
-
 
     //Создание надписи
     hFont = CreateFont(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
@@ -244,10 +215,7 @@ void DrawTextOnPieChartPage(HWND hWnd, HDC hdc, RECT rectClient) {
         (HMENU)ID_CREATE_BUTTON_2, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
         nullptr);
 
-    // Освобождение шрифта
-    DeleteObject(hFont);
-
-
+    DeleteObject(hFont); // Освобождение шрифта
 }
 
 int getPieChartData()
@@ -259,7 +227,6 @@ int getPieChartData()
 
     double* tempArr = new double[numPieTextBox];
 
-    //OutputDebugString(L"GetHistogramData!\n");
     for (int i = 0; i < numPieTextBox; i++) {
         length = GetWindowTextLength(pieTextBox[i][0]); //получаем длину
         TCHAR* buffer1 = new TCHAR[length + 1]; // создаем буфер для хранения текста
@@ -293,10 +260,6 @@ int getPieChartData()
                 wcscat_s(message, 1024, numStr);
                 wcscat_s(message, 1024, L"\n");
             }
-            //TCHAR str1[20];
-            //swprintf_s(str1, L"%lf", tempArr[i]);
-            //MessageBox(NULL, str1, L"", MB_OK);
-
         }
         delete[] buffer1; //освобождаем память
 

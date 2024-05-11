@@ -1,34 +1,17 @@
-//#pragma once
-
 #include "GraphPage.h"
-
-/*----------------------------------- Процедура окна -----------------------------------*/
 
 LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    //OutputDebugString(L"GraphPageProc 1\n");
-    //PAINTSTRUCT ps;
     UINT state;
-    
-
     RECT rectClient;
     GetClientRect(hGraphPage, &rectClient);
 
     switch (message)
     {
-    case WM_CREATE: {
-        
-        for (int i = 0; i < 3; i++) {
-            CheckBox[i] = CreateWindowEx(NULL, L"BUTTON", CheckBoxNames[i], WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-                rectClient.right - 190, 150 + i * 60, 110, 30, hGraphPage, (HMENU)CheckBoxIDs[i], NULL, NULL);
-        }
-        if (CheckBox[0]) MessageBox(hWnd, L"AAAAAAAAAA", L"AAAAAAAAAA", MB_OK);
-        break;
-    }
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hGraphPage, &ps); // Используйте hdc, объявленный локально;
+        HDC hdc = BeginPaint(hGraphPage, &ps);
         OutputDebugString(L"WM_PAINT_123!\n");
 
         RECT rect;
@@ -50,10 +33,8 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
             {
                 HDC hdc = (HDC)wParam;
                 SetBkMode(hdc, TRANSPARENT);
-                //SetTextColor(hdc, RGB(255, 0, 0));
                 SetTextColor(hdc, color);
                 return (LRESULT)GetStockObject(NULL_BRUSH);   
-                
             }
             color = color >> 8; // изменение цвета пера для следующего ряда
         }
@@ -73,25 +54,6 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
             // Обработка нажатия на чекбокс 1
             OutputDebugString(L"ID_CHECKBOX_1!\n");
             InvalidateRect(hGraphPage, NULL, TRUE);
-            /*
-            // Получаем текущий статус чекбокса
-            state = SendMessage(hCheckBox1, BM_GETCHECK, 0, 0);
-
-            // Проверяем статус чекбокса
-            switch (state)
-            {
-            case BST_CHECKED: // Чекбокс нажат
-                // Сбрасываем состояние чекбокса
-                SendMessage(hCheckBox1, BM_SETCHECK, BST_UNCHECKED, 0);
-                break;
-            case BST_UNCHECKED: // Чекбокс не нажат
-                // Устанавливаем состояние чекбокса в "нажатое"
-                SendMessage(hCheckBox1, BM_SETCHECK, BST_CHECKED, 0);
-                break;
-            default:
-                // Неопределенный статус
-                break;
-            }*/
             break;
         case ID_CHECKBOX_2:
             // Обработка нажатия на чекбокс 2
@@ -114,8 +76,6 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
     else
         return DefWindowProc(hWnd, message, wParam, lParam);
 }
-
-/*------------------------------ Функция рисования графика ------------------------------*/
 
 void DrawGraph(HDC hdc, RECT rectClient, double** x, // массив данных
     int n, // количество точек
@@ -210,7 +170,6 @@ void DrawGraph(HDC hdc, RECT rectClient, double** x, // массив данных
             }
         }
         color = color >> 8; // изменение цвета пера для следующего ряда
-        //DeleteObject(hpen); // удаление текущего пера
     }
 }
 
@@ -228,28 +187,8 @@ void DrawTextOnGraphPage(HDC hdc, RECT rectClient) {
     SetBkMode(hdc, TRANSPARENT); // фон прозрачный
 
     // Рисуем текст с прозрачным фоном
-    //TextOut(hdc, rectClient.right - 200, 20, L"Выберите графики,\nкоторые вы хотите увидеть:", wcslen(L"Выберите графики,\nкоторые вы хотите увидеть:"));
-
     RECT rectText = { rectClient.right - 180, 20, rectClient.right, rectClient.bottom };
     DrawText(hdc, L"Выберите графики,\nкоторые вы хотите увидеть:", -1, &rectText, DT_WORDBREAK);
-
-    //state = SendMessage(hCheckBox1, BM_GETCHECK, 0, 0);
-    //DestroyWindow(hCheckBox1); //Удаление CheckBox, чтобы заново нарисовать в другом месте
-    //hCheckBox1 = CreateWindowEx(NULL, L"BUTTON", L"Checkbox_1", WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-    //    rectClient.right - 190, 90, 110, 30, hGraphPage, (HMENU)ID_CHECKBOX_1, NULL, NULL);
-    //if (state == BST_CHECKED) SendMessage(hCheckBox1, BM_SETCHECK, BST_CHECKED, 0);
-
-    //state = SendMessage(hCheckBox2, BM_GETCHECK, 0, 0);
-    //DestroyWindow(hCheckBox2); //Удаление CheckBox, чтобы заново нарисовать в другом месте
-    //hCheckBox2 = CreateWindowEx(NULL, L"BUTTON", L"Checkbox_2", WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-    //    rectClient.right - 190, 120, 110, 30, hGraphPage, (HMENU)ID_CHECKBOX_2, NULL, NULL);
-    //if (state == BST_CHECKED) SendMessage(hCheckBox2, BM_SETCHECK, BST_CHECKED, 0);
-
-    //state = SendMessage(hCheckBox3, BM_GETCHECK, 0, 0);
-    //DestroyWindow(hCheckBox3); //Удаление CheckBox, чтобы заново нарисовать в другом месте
-    //hCheckBox3 = CreateWindowEx(NULL, L"BUTTON", L"Checkbox_3", WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-    //    rectClient.right - 190, 150, 110, 30, hGraphPage, (HMENU)ID_CHECKBOX_3, NULL, NULL);
-    //if (state == BST_CHECKED) SendMessage(hCheckBox3, BM_SETCHECK, BST_CHECKED, 0);
 
     for (int i = 0; i < 3; i++) {
         state = SendMessage(CheckBox[i], BM_GETCHECK, 0, 0);
@@ -259,9 +198,7 @@ void DrawTextOnGraphPage(HDC hdc, RECT rectClient) {
         if (state == BST_CHECKED) SendMessage(CheckBox[i], BM_SETCHECK, BST_CHECKED, 0);
     }
 
-    // Освобождение шрифта
-    DeleteObject(hFont);
-
+    DeleteObject(hFont); // Освобождение шрифта
 }
 
 double** getGraphData(int n)
@@ -276,12 +213,10 @@ double** getGraphData(int n)
     {
         // 3 графика (4-1)
         double x = (double)i * 0.099;
-        //double x = (double)i;
         f[0][i] = x;
         f[3][i] = sin(x);
-        f[1][i] = cos(x); //!!!!!
-        //f[2][i] = 0.31459265358979 * x - 1.0; //!!!!!!!!!
-        f[2][i] = 3.14159265358979 * x / 10 - 1.0; //!!!!!!!!!
+        f[1][i] = cos(x);
+        f[2][i] = 3.14159265358979 * x / 10 - 1.0;
     }
     return f;
 }

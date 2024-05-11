@@ -74,21 +74,10 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-//void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // рисование отрезка прямой линии
+void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); //отрезок прямой
+bool containsLetters(TCHAR* str); //проверка на буквы
 
-//void DrawGraph(HDC hdc, RECT rectClient, double** x, int n, int numrow);
-//void DrawTextOnGraphPage(HDC hdc, RECT rectClient); // текст
-//void DrawHistogram(HWND hWnd);
-//void DrawPieChart(HWND hWnd);
-//double** getData(int size);
-void line(HDC hdc, int Xs, int Ys, int Xf, int Yf);
-bool containsLetters(TCHAR* str);
-
-
-
-
-
-
+//массив цветов для диаграмм
 int colors[5] = {   RGB(204, 0, 0),
                     RGB(255, 255, 0),
                     RGB(51, 102, 0),
@@ -153,9 +142,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
         CW_USEDEFAULT, 0, 1000, 600, NULL, NULL, hInstance, NULL);// 0, 800, 600,
 
     if (!hWnd)
-    {
         return FALSE;
-    }
+
     // Показать окно и обновить его
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -217,25 +205,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             0, 20, 760, 540, hWnd, nullptr, hInst, nullptr);
 
         if (hGraphPage)
-        {
             g_pGraphPageProc = (WNDPROC)SetWindowLongPtr(hGraphPage, GWLP_WNDPROC, (LONG_PTR)GraphPageProc); // Заменяем процедуру окна
-        }
 
         hHistogramPage = CreateWindow(WC_STATIC, L"", WS_CHILD | WS_VISIBLE,
             0, 20, 760, 540, hWnd, nullptr, hInst, nullptr);
 
         if (hHistogramPage)
-        {
             g_pHistogramPageProc = (WNDPROC)SetWindowLongPtr(hHistogramPage, GWLP_WNDPROC, (LONG_PTR)HistogramPageProc); // Заменяем процедуру окна
-        }
+
 
         hPieChartPage = CreateWindow(WC_STATIC, L"", WS_CHILD | WS_VISIBLE,
             0, 20, 760, 540, hWnd, nullptr, hInst, nullptr);
 
         if (hPieChartPage)
-        {
             g_pPieChartPageProc = (WNDPROC)SetWindowLongPtr(hPieChartPage, GWLP_WNDPROC, (LONG_PTR)PieChartPageProc); // Заменяем процедуру окна
-        }
+
 
         // Добавляем вкладки на TabControl и связываем их с соответствующими окнами
         TCITEM tie;
@@ -244,7 +228,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         tie.lParam = (LPARAM)hGraphPage;
         TabCtrl_InsertItem(hTabControl, 0, &tie);
 
-        
         tie.pszText = const_cast<LPTSTR>(L"Гистограмма");
         tie.lParam = (LPARAM)hHistogramPage;
         TabCtrl_InsertItem(hTabControl, 1, &tie);
@@ -257,9 +240,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         ShowWindow(hHistogramPage, SW_HIDE);
         ShowWindow(hPieChartPage, SW_HIDE);
 
-        /*ShowWindow(hGraphPage, SW_HIDE);
-        ShowWindow(hHistogramPage, SW_SHOW);
-        ShowWindow(hPieChartPage, SW_HIDE);*/
         break;
     }
     break;
@@ -297,6 +277,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     case WM_GETMINMAXINFO:
     {
+        //Устанавливаем минимальные и максимальные размеры
         LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
         lpMMI->ptMinTrackSize.x = 700;
         lpMMI->ptMinTrackSize.y = 370;
@@ -324,9 +305,8 @@ void line(HDC hdc, int Xs, int Ys, int Xf, int Yf) // рисование отр�
 bool containsLetters(TCHAR* str) {
     while (*str) {
         //if (_istalpha(*str) || *str == ',') {
-        if ((*str < '0' || *str > '9') && (*str != '.')) {
+        if ((*str < '0' || *str > '9') && (*str != '.'))
             return true; // Если найдена буква, возвращаем true
-        }
         str++; // Переходим к следующему символу
     }
     return false; // Если не найдено ни одной буквы, возвращаем false
