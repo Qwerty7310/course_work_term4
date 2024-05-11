@@ -18,15 +18,15 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         GetClientRect(hWnd, &rect);
         FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW));
 
-        SetTextColor(hdc, 0x00FF0000); // синий цвет букв
-        DrawGraph(hdc, ps.rcPaint, x, NUM, 3); // построение графика
-        DrawTextOnGraphPage(hdc, ps.rcPaint); // текст
+        SetTextColor(hdc, 0x00FF0000); //РІС‹Р±РёСЂР°РµРј С†РІРµС‚
+        DrawGraph(hdc, ps.rcPaint, x, NUM, 3); //СЂРёСЃСѓРµРј РіСЂР°С„РёРєРё
+        DrawTextOnGraphPage(hdc, ps.rcPaint); //СЂРёСЃСѓРµРј С‚РµРєСЃС‚
         EndPaint(hGraphPage, &ps);
         break;
     }
     case WM_CTLCOLORSTATIC:
     {
-        int color = 0xFF0000; // синее перо для первого графика
+        int color = 0xFF0000; //СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РЅР°С‡Р°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С†РІРµС‚Р°
         for (int i = 0; i < 3; i++)
         {
             if ((HWND)lParam == CheckBox[i])
@@ -36,32 +36,30 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
                 SetTextColor(hdc, color);
                 return (LRESULT)GetStockObject(NULL_BRUSH);   
             }
-            color = color >> 8; // изменение цвета пера для следующего ряда
+            color = color >> 8; //СЃРјРµС‰Р°РµРј С†РІРµС‚ РЅР° СЃР»РµРґСѓСЋС‰РёР№
         }
     }
     break;
     case WM_COMMAND:
     {
-        // Получаем ID чекбокса, который был нажат
+        //С„РёРєСЃРёСЂСѓРµРј РЅР°Р¶Р°С‚РёРµ РЅР° CheckBox'С‹
         int wmId = LOWORD(wParam);
-        // Получаем дескриптор (HWND) чекбокса
         HWND hwndCtl = (HWND)lParam;
         HBRUSH hBrush;
-        // Обрабатываем нажатие на чекбокс в зависимости от его ID
         switch (wmId)
         {
         case ID_CHECKBOX_1:
-            // Обработка нажатия на чекбокс 1
+            //РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РЅР°Р¶Р°С‚РёРµ РЅР° CheckBox 1
             OutputDebugString(L"ID_CHECKBOX_1!\n");
             InvalidateRect(hGraphPage, NULL, TRUE);
             break;
         case ID_CHECKBOX_2:
-            // Обработка нажатия на чекбокс 2
+            //РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РЅР°Р¶Р°С‚РёРµ РЅР° CheckBox 2
             OutputDebugString(L"ID_CHECKBOX_2!\n");
             InvalidateRect(hGraphPage, NULL, TRUE);
             break;
         case ID_CHECKBOX_3:
-            // Обработка нажатия на чекбокс 3
+            //РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РЅР°Р¶Р°С‚РёРµ РЅР° CheckBox 3
             OutputDebugString(L"ID_CHECKBOX_3!\n");
             InvalidateRect(hGraphPage, NULL, TRUE);
             break;
@@ -77,18 +75,18 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-void DrawGraph(HDC hdc, RECT rectClient, double** x, // массив данных
-    int n, // количество точек
-    int numrow = 1) // количество рядов данных (по умолчанию 1)
+void DrawGraph(HDC hdc, RECT rectClient, double** x,
+    int n, //РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє
+    int numrow = 1) //РєРѕР»РёС‡РµСЃС‚РІРѕ СЂСЏРґРѕРІ РґР°РЅРЅС‹С… (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ 1)
 {
-    SetBkMode(hdc, TRANSPARENT); // фон прозрачный
+    SetBkMode(hdc, TRANSPARENT); //РїСЂРѕР·СЂР°С‡РЅС‹Р№ С„РѕРЅ
     double OffsetY, OffsetX; double MAX_X, MAX_Y; double ScaleX, ScaleY;
     double min, max; int height, width;
-    int X, Y; // координаты в окне (в рх)
+    int X, Y; //РєРѕРѕСЂРґРёРЅР°С‚С‹ РЅР° РіСЂР°С„РёРєРµ
     HPEN hpen;
     height = rectClient.bottom - rectClient.top;
     width = rectClient.right - rectClient.left - 200;
-    // Область допустимых значений Х
+    //РЅР°С…РѕРґРёРј СЂР°Р·Р±СЂРѕСЃ РїРѕ РѕСЃРё X Рё РїРѕ РѕСЃРё Y
     min = x[0][0];
     max = x[0][0];
     for (int i = 0; i < n; i++)
@@ -98,40 +96,39 @@ void DrawGraph(HDC hdc, RECT rectClient, double** x, // массив данных
     }
 
     double temp = max - min;
-    MAX_X = max - min; // Разброс по оси Х
-    OffsetX = min * width / MAX_X; // смещение X
-    ScaleX = (double)width / MAX_X; // масштабный коэффициент Х
-    // Область допустимых значений Y
+    MAX_X = max - min; //СЂР°Р·Р±СЂРѕСЃ РїРѕ РѕСЃРё X
+    OffsetX = min * width / MAX_X; //СЃРјРµС‰РµРЅРёРµ X
+    ScaleX = (double)width / MAX_X; //РјР°СЃС€С‚Р°Р±РЅС‹Р№ РєРѕСЌС„С„РёС†РёРµРЅС‚ X
+
     max = 1.5; /////////!!!!!!!!!!!
     min = -1.5; ///
 
-    MAX_Y = max - min; // Разброс по оси Y
-    OffsetY = max * height / (MAX_Y); // смещение Y
-    ScaleY = (double)height / MAX_Y; // масштабный коэффициент Y
-    // Отрисовка осей координат
-    hpen = CreatePen(PS_SOLID, 2, 0); // чёрное перо толщиной в 3 пикселя
+    MAX_Y = max - min; // СЂР°Р·Р±СЂРѕ РїРѕ РѕСЃРё Y
+    OffsetY = max * height / (MAX_Y); // СЃРјРµС‰РµРЅРёРµ Y
+    ScaleY = (double)height / MAX_Y; // РјР°СЃС€С‚Р°Р±РЅС‹Р№ РєРѕСЌС„С„РёС†РёРµРЅС‚ Y
+    //СЂРёСЃСѓРµРј РѕСЃРё РіСЂР°С„РёРєР°
+    hpen = CreatePen(PS_SOLID, 2, 0); //СЃРѕР·РґР°РµРј РїРµСЂРѕ С‚РѕР»С‰РёРЅРѕР№ РІ 3 РїРёРєСЃРµР»СЏ
     SelectObject(hdc, hpen);
-    line(hdc, 10, OffsetY, width - 10, OffsetY); // рисование горизонтальной оси line(hdc, width - 10, OffsetY, width - 15, OffsetY - 5); // верхнее горизонтальное оперение line(hdc, width - 10, OffsetY, width - 15, OffsetY + 5); // нижнее горизонтальное оперение
+    line(hdc, 10, OffsetY, width - 10, OffsetY); //СЂРёСЃСѓРµРј РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅСѓСЋ РѕСЃСЊ
     
-    //рисование стрелочек
+    //СЂРёСЃСѓРµРј СЃС‚СЂРµР»РєСѓ
     line(hdc, width - 20, OffsetY - 5, width - 10, OffsetY);
     line(hdc, width - 20, OffsetY + 5, width - 10, OffsetY);
     
-    for (int i = 1; i < 9; i++) line(hdc, i * 0.118 * width, OffsetY, i * 0.118 * width, OffsetY - 3);
-    // отметки на горизонтальной оси
-    line(hdc, OffsetX + 10, 10, OffsetX + 10, height - 5); // рисование вертикальной оси line(hdc, OffsetX + 10, 0, OffsetX + 15, 10); // рисование правого вертикального оперения line(hdc, OffsetX + 10, 0, OffsetX + 5, 10); // рисование левого вертикального оперения
-  
-    //рисование стрелочек
+    for (int i = 1; i < 9; i++) line(hdc, i * 0.118 * width, OffsetY, i * 0.118 * width, OffsetY - 3); //РґРµР»РµРЅРёСЏ РЅР° РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕР№ С€РєР°Р»Рµ
+
+    line(hdc, OffsetX + 10, 10, OffsetX + 10, height - 5); //СЂРёСЃСѓРµРј РІРµСЂС‚РёРєР°Р»СЊРЅСѓСЋ РѕСЃСЊ
+    
+    //СЂРёСЃСѓРµРј СЃС‚СЂРµР»РєСѓ
     line(hdc, OffsetX + 5, 20, OffsetX + 10, 10);
     line(hdc, OffsetX + 15, 20, OffsetX + 10, 10);
     
-    for (int i = -2; i < 3; i++) line(hdc, OffsetX + 10, OffsetY + height / 6 * i, OffsetX + 15, OffsetY + height / 6 * i);
-    // отметки на вертикальной оси
-    DeleteObject(hpen); // удаление черного пера
+    for (int i = -2; i < 3; i++) line(hdc, OffsetX + 10, OffsetY + height / 6 * i, OffsetX + 15, OffsetY + height / 6 * i); //РґРµР»РµРЅРёСЏ РЅР° РІРµСЂС‚РёРєР°Р»СЊРЅРѕР№ С€РєР°Р»Рµ
 
-                // Отрисовка графика функции
-    int color = 0xFF0000; // синее перо для первого ряда данных
-    //TextOut(hdc, 21, 7, _T("Y = sin (X)"), 11); // Вывод текста y=sin(x) 8 символов
+    DeleteObject(hpen); //СѓРґР°Р»СЏРµРј РІС‹Р±СЂР°РЅРЅРѕРµ РїРµСЂРѕ
+
+    //РґРѕР±Р°РІР»СЏРµРј Р·РЅР°С‡РµРЅРёСЏ РЅР° РѕСЃРё
+    int color = 0xFF0000; //РІС‹Р±РёСЂР°РµРј С†РІРµС‚
     TextOut(hdc, 27, height / 6 - 12, _T("1,0"), 3);
     TextOut(hdc, 27, height / 3 - 12, _T("0,5"), 3);
     TextOut(hdc, 27, 2 * height / 3 - 12, _T("-0,5"), 4);
@@ -148,57 +145,55 @@ void DrawGraph(HDC hdc, RECT rectClient, double** x, // массив данных
     TextOut(hdc, 0.98 * width, 5 + 0.5 * height, _T("x"), 1);
     for (int j = 1; j <= numrow; j++)
     {
-        //hpen = CreatePen(PS_SOLID, 3, color); // формирование пера толщиной 3 пикселя
         if (SendMessage(CheckBox[j - 1], BM_GETCHECK, 0, 0) == BST_CHECKED)
         {
             while (1)
             {
-                hpen = CreatePen(PS_SOLID, 3, color); // формирование пера толщиной 3 пикселя
+                hpen = CreatePen(PS_SOLID, 3, color); //СЃРѕР·РґР°РµРј РїРµСЂРѕ С‚РѕР»С‰РёРЅРѕР№ 3 РїРёРєСЃРµР»СЏ
                 SelectObject(hdc, hpen);
-                X = (int)(OffsetX + x[0][0] * ScaleX); // начальная точка графика
+                X = (int)(OffsetX + x[0][0] * ScaleX); //РєРѕРѕСЂРґРёРЅР°С‚С‹
                 Y = (int)(OffsetY - x[j][0] * ScaleY);
-                MoveToEx(hdc, X + 10, Y, 0); // перемещение в начальную точку
+                MoveToEx(hdc, X + 10, Y, 0);
                 for (int i = 0; i < (n - 3); i++)
                 {
                     X = OffsetX + 12 + x[0][i] * ScaleX;
                     Y = OffsetY - x[j][i] * ScaleY;
                     LineTo(hdc, X, Y);
                 }
-                //color = color >> 8; // изменение цвета пера для следующего ряда
-                DeleteObject(hpen); // удаление текущего пера
+                DeleteObject(hpen);
                 break;
             }
         }
-        color = color >> 8; // изменение цвета пера для следующего ряда
+        color = color >> 8; //СЃРґРІРёРіР°РµРј С†РІРµС‚ РЅР° РѕРґРёРЅ РґР»СЏ СЃР»РµРґСѓСЋС‰РµРіРѕ РіСЂР°С„РёРєР°
     }
 }
 
 void DrawTextOnGraphPage(HDC hdc, RECT rectClient) {
     UINT state;
 
-    //Создание надписи
+    //СЃРѕР·РґР°РµРј С€СЂРёС„С‚
     HFONT hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
         OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
         DEFAULT_PITCH | FF_SWISS, L"Arial");
 
-    // серый цвет
-    SetTextColor(hdc, RGB(100, 100, 100));
-    SelectObject(hdc, hFont); // выбираем шрифт
-    SetBkMode(hdc, TRANSPARENT); // фон прозрачный
+    SetTextColor(hdc, RGB(100, 100, 100)); //РІС‹Р±РёСЂР°РµРј С†РІРµС‚
+    SelectObject(hdc, hFont); //РІС‹Р±РёСЂР°РµРј С€СЂРёС„С‚
+    SetBkMode(hdc, TRANSPARENT); //РїСЂРѕР·СЂР°С‡РЅС‹Р№ С„РѕРЅ
 
-    // Рисуем текст с прозрачным фоном
+    //СЂРёСЃСѓРµРј РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
     RECT rectText = { rectClient.right - 180, 20, rectClient.right, rectClient.bottom };
-    DrawText(hdc, L"Выберите графики,\nкоторые вы хотите увидеть:", -1, &rectText, DT_WORDBREAK);
+    DrawText(hdc, L"Р’С‹Р±РµСЂРёС‚Рµ РіСЂР°С„РёРєРё,\nРєРѕС‚РѕСЂС‹Рµ РІС‹ С…РѕС‚РёС‚Рµ РїРѕСЃС‚СЂРѕРёС‚СЊ:", -1, &rectText, DT_WORDBREAK);
 
+    //РґРѕР±Р°РІР»СЏРµРј CheckBox'С‹
     for (int i = 0; i < 3; i++) {
         state = SendMessage(CheckBox[i], BM_GETCHECK, 0, 0);
-        DestroyWindow(CheckBox[i]); //Удаление CheckBox, чтобы заново нарисовать в другом месте
+        DestroyWindow(CheckBox[i]); //СѓРґР°Р»СЏРµРј CheckBox, С‡С‚РѕР±С‹ Р·Р°РЅРѕРІРѕ РЅР°СЂРёСЃРѕРІР°С‚СЊ РІ РґСЂСѓРіРѕРј РјРµСЃС‚Рµ
         CheckBox[i] = CreateWindowEx(NULL, L"BUTTON", CheckBoxNames[i], WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
             rectClient.right - 170, 100 + i * 30, 110, 30, hGraphPage, (HMENU)CheckBoxIDs[i], NULL, NULL);
         if (state == BST_CHECKED) SendMessage(CheckBox[i], BM_SETCHECK, BST_CHECKED, 0);
     }
 
-    DeleteObject(hFont); // Освобождение шрифта
+    DeleteObject(hFont); //СѓРґР°Р»СЏРµРј С€СЂРёС„С‚
 }
 
 double** getGraphData(int n)
@@ -211,7 +206,7 @@ double** getGraphData(int n)
     f[3] = new double[n];
     for (int i = 0; i < n; i++)
     {
-        // 3 графика (4-1)
+        // 3 РіСЂР°С„РёРєР° (4-1)
         double x = (double)i * 0.099;
         f[0][i] = x;
         f[3][i] = sin(x);

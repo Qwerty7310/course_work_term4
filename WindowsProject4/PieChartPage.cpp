@@ -12,17 +12,29 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     {
     case WM_PAINT:
     {
-
         PAINTSTRUCT ps;
 
-        HDC hdc = BeginPaint(hPieChartPage, &ps); // Используйте hdc, объявленный локально;
+        HDC hdc = BeginPaint(hPieChartPage, &ps);
 
         RECT rect;
         GetClientRect(hWnd, &rect);
         FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW));
 
-        if (flagDrawPie) DrawPieChart(hdc, ps.rcPaint); // построение графика
-        DrawTextOnPieChartPage(hWnd, hdc, ps.rcPaint); // текст
+        if (flagDrawPie) DrawPieChart(hdc, ps.rcPaint); //РµСЃР»Рё РІС‹Р±СЂР°РЅС‹ Р·РЅР°С‡РµРЅРёСЏ, СЂРёСЃСѓРµРј РґРёР°РіСЂР°РјРјСѓ
+        else { //РёРЅР°С‡Рµ РІС‹РІРѕРґРёРј РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
+            HFONT hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+                DEFAULT_PITCH | FF_SWISS, L"Arial");
+            SelectObject(hdc, hFont); //РІС‹Р±РёСЂР°РµРј С€СЂРёС„С‚
+            RECT rectText;
+            rectText.left = rect.left + (rect.right - rect.left - 270) / 4;//РІРµСЂС…РЅРёР№ Р»РµРІС‹Р№ СѓРіРѕР»
+            rectText.top = rect.top + (rect.bottom - rect.top + 50) / 4;
+            rectText.right = rect.left + (rect.right - rect.left - 270) * 3 / 4; //РЅРёР¶РЅРёР№ РїСЂР°РІС‹Р№
+            rectText.bottom = rect.top + (rect.bottom - rect.top + 50) * 3 / 4;
+
+            DrawText(hdc, L"Р’РІРµРґРёС‚Рµ Р’Р°С€Рё РґР°РЅРЅС‹Рµ РґР»СЏ РїРѕСЃС‚СЂРѕРµРЅРёСЏ РєСЂСѓРіРѕРІРѕР№ РґРёР°РіСЂР°РјРјС‹.", -1, &rectText, DT_WORDBREAK | DT_CENTER | DT_VCENTER);
+        }
+        DrawTextOnPieChartPage(hWnd, hdc, ps.rcPaint); //СЂРёСЃСѓРµРј С‚РµРєСЃС‚
         EndPaint(hPieChartPage, &ps);
         break;
     }
@@ -31,7 +43,6 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     {
         switch (LOWORD(wParam))
         {
-            // ID вашей кнопки "Добавить"
         case ID_ADD_BUTTON_2:
             EnableWindow(deleteButtonPie, TRUE);
             numPieTextBox += 1;
@@ -48,12 +59,12 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
             break;
         case ID_CREATE_BUTTON_2:
             if (!getPieChartData()) {
-                //данные корректны
+                //РґР°РЅРЅС‹Рµ РєРѕСЂСЂРµРєС‚РЅС‹
                 for (int i = 0; i < numPieTextBox; i++)
                     for (int j = 0; j < 2; j++) {
-                        length = GetWindowTextLength(pieTextBox[i][j]); // Получить длину текста в текстовом поле
+                        length = GetWindowTextLength(pieTextBox[i][j]); //РїРѕР»СѓС‡Р°РµРј РґР»РёРЅСѓ СЃС‚СЂРѕРєРё РІ С‚РµРєСЃС‚РѕРІРѕРј РїРѕР»Рµ
                         pieText[i][j] = new TCHAR[length + 1];
-                        GetWindowText(pieTextBox[i][j], pieText[i][j], length + 1); // Получить текст из текстового поля
+                        GetWindowText(pieTextBox[i][j], pieText[i][j], length + 1); //РїРѕР»СѓС‡Р°РµРј С‚РµРєСЃС‚ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ
                     }
                 numSectors = numPieTextBox;
                 flagDrawPie = true;
@@ -80,19 +91,16 @@ void DrawPieChart(HDC hdc, RECT rectClient)
     height = rectClient.bottom - rectClient.top - 50;
     width = rectClient.right - rectClient.left - 270;
 
-    //шрифт для рисования текста
     HFONT hFont;
-    // черный цвет
-    SetTextColor(hdc, RGB(0, 0, 0));
+    SetTextColor(hdc, RGB(0, 0, 0)); //РІС‹Р±РёСЂР°РµРј С†РІРµС‚
 
-    //Положение центра диаграммы и ее радиус
-    //int xCenter = (rectClient.bottom + rectClient.top) / 2;
+    //РѕРїСЂРµРґРµР»СЏРµРј РЅР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ С†РµРЅС‚СЂР° РґРёР°РіСЂР°РјРјС‹
     int xCenter = rectClient.left + width / 1.9;
     int yCenter = rectClient.bottom - height / 1.8;
     double radius = min(height, width * 0.65) / 2.5;
 
-    double startAngle = 90; //стартовый угол сектора
-    double sweepAngl = 0; //угол поворота
+    double startAngle = 90; //СЃС‚Р°СЂС‚РѕРІС‹Р№ СѓРіРѕР»
+    double sweepAngl = 0; //СѓРіРѕР» РїРѕРІРѕСЂРѕС‚Р°
     for (int i = 0; i < numSectors; i++) {
         startAngle += sweepAngl;
         sweepAngl = pieData[i + 1] / pieData[0] * 360;
@@ -105,7 +113,7 @@ void DrawPieChart(HDC hdc, RECT rectClient)
         EndPath(hdc);
         StrokeAndFillPath(hdc);
 
-        //Добавляем значения на диграмму
+        //СЃС‡РёС‚Р°РµРј РїРѕР»РѕР¶РµРЅРёРµ С†РµРЅС‚СЂР° СЃРµРєС‚РѕСЂР° РґР»СЏ СЂРёСЃРѕРІР°РЅРёСЏ С‡РёСЃР»Р°
         int xText = xCenter + radius * 0.7 * cos((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
         int yText = yCenter - radius * 0.7 * sin((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
         RECT rectText;
@@ -114,20 +122,21 @@ void DrawPieChart(HDC hdc, RECT rectClient)
         rectText.top = yText - max(10, min(0.76 * radius, 20));
         rectText.bottom = yText + max(10, min(0.76 * radius, 20));
 
-        wchar_t numStr[10]; // буфер для числа
+        wchar_t numStr[10]; //Р±СѓС„РµСЂ РґР»СЏ С‡РёСЃР»Р°
         if (pieData[i + 1] == (int)pieData[i + 1])
             swprintf_s(numStr, L"%d", (int)pieData[i + 1]);
         else
             swprintf_s(numStr, L"%.2lf", pieData[i + 1]);
 
+        //СЃРѕР·РґР°РµРј С€СЂРёС„С‚
         hFont = CreateFont(max(15, min(0.16 * radius, 35)), 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
             OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
             DEFAULT_PITCH | FF_SWISS, L"Arial");
-        SelectObject(hdc, hFont); // выбираем шрифт
+        SelectObject(hdc, hFont); //РІС‹Р±РёСЂР°РµРј С€СЂРёС„С‚
         SetBkMode(hdc, OPAQUE);
         DrawText(hdc, numStr, -1, &rectText, DT_WORDBREAK | DT_CENTER);
 
-        //Добавляем подписи на диаграмму
+        //РґРѕР±Р°РІР»СЏРµРј РїРѕРґРїРёСЃРё Рє СЃРµРєС‚РѕСЂР°Рј
         int xStLine = xCenter + radius * cos((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
         int yStLine = yCenter - radius * sin((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
         int xFinLine = xCenter + radius * 1.15 * cos((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
@@ -138,8 +147,8 @@ void DrawPieChart(HDC hdc, RECT rectClient)
         hFont = CreateFont(max(13, min(0.12 * radius, 24)), 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
             OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
             DEFAULT_PITCH | FF_SWISS, L"Arial");
-        SelectObject(hdc, hFont); // выбираем шрифт
-        SetBkMode(hdc, TRANSPARENT); // фон прозрачный
+        SelectObject(hdc, hFont); //РІС‹Р±РёСЂР°РµРј С€СЂРёС„С‚
+        SetBkMode(hdc, TRANSPARENT); //РїСЂРѕР·СЂР°С‡РЅС‹Р№ С„РѕРЅ
         if (xFinLine < xCenter) {
             rectText.left = xFinLine - max(100, min(0.75 * radius, 200));
             rectText.right = xFinLine - max(10, min(0.06 * radius, 10));
@@ -160,34 +169,33 @@ void DrawTextOnPieChartPage(HWND hWnd, HDC hdc, RECT rectClient) {
     BOOL isEnabled = TRUE;
     int length;
 
-    //Создание надписи
+    //СЃРѕР·РґР°РµРј С€СЂРёС„С‚
     hFont = CreateFont(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
         OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
         DEFAULT_PITCH | FF_SWISS, L"Arial");
 
-    // серый цвет
-    SetTextColor(hdc, RGB(100, 100, 100));
-    SelectObject(hdc, hFont); // выбираем шрифт
-    SetBkMode(hdc, TRANSPARENT); // фон прозрачный
+    SetTextColor(hdc, RGB(100, 100, 100)); //РІС‹Р±РёСЂР°РµРј С†РІРµС‚
+    SelectObject(hdc, hFont); //РІС‹Р±РёСЂР°РµРј С€СЂРёС„С‚
+    SetBkMode(hdc, TRANSPARENT); //РїСЂРѕР·СЂР°С‡РЅС‹Р№ С„РѕРЅ
 
     rectText = { rectClient.right - 236, 10, rectClient.right, rectClient.bottom };
-    DrawText(hdc, L"Значение             Название", -1, &rectText, DT_WORDBREAK);
+    DrawText(hdc, L"Р—РЅР°С‡РµРЅРёРµ             РќР°Р·РІР°РЅРёРµ", -1, &rectText, DT_WORDBREAK);
 
     for (int i = 0; i < numPieTextBox; i++) {
         TCHAR* buffer;
 
-        length = GetWindowTextLength(pieTextBox[i][0]); // Получить длину текста в текстовом поле
-        buffer = new TCHAR[length + 1]; // Создать буфер для хранения текста
-        GetWindowText(pieTextBox[i][0], buffer, length + 1); // Получить текст из текстового поля
-        DestroyWindow(pieTextBox[i][0]); //Удаление TextBox, чтобы заново нарисовать в другом месте
+        length = GetWindowTextLength(pieTextBox[i][0]); //РїРѕР»СѓС‡Р°РµРј РґР»РёРЅСѓ СЃС‚СЂРѕРєРё РІ С‚РµРєСЃС‚РѕРІРѕРј РїРѕР»Рµ
+        buffer = new TCHAR[length + 1]; //СЃРѕР·РґР°РµРј Р±СѓС„С„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃС‚СЂРѕРєРё
+        GetWindowText(pieTextBox[i][0], buffer, length + 1); //РїРѕР»СѓС‡Р°РµРј С‚РµРєСЃС‚ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ
+        DestroyWindow(pieTextBox[i][0]); //СѓРґР°Р»СЏРµРј TextBox, С‡С‚РѕР±С‹ Р·Р°РЅРѕРІРѕ РЅР°СЂРёСЃРѕРІР°С‚СЊ РІ РґСЂСѓРіРѕРј РјРµСЃС‚Рµ
         pieTextBox[i][0] = CreateWindowEx(NULL, L"Edit", L"", WS_CHILD | WS_VISIBLE | WS_BORDER, rectClient.right - 230, 40 + i * 30, 60, 20,
             hWnd, (HMENU)pieTextBoxIDs[i][0], (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), nullptr);
         SetWindowText(pieTextBox[i][0], buffer);
 
-        length = GetWindowTextLength(pieTextBox[i][1]); // Получить длину текста в текстовом поле
-        buffer = new TCHAR[length + 1]; // Создать буфер для хранения текста
-        GetWindowText(pieTextBox[i][1], buffer, length + 1); // Получить текст из текстового поля
-        DestroyWindow(pieTextBox[i][1]); //Удаление TextBox, чтобы заново нарисовать в другом месте
+        length = GetWindowTextLength(pieTextBox[i][1]); //РїРѕР»СѓС‡Р°РµРј РґР»РёРЅСѓ СЃС‚СЂРѕРєРё РІ С‚РµРєСЃС‚РѕРІРѕРј РїРѕР»Рµ
+        buffer = new TCHAR[length + 1]; //СЃРѕР·РґР°РµРј Р±СѓС„С„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃС‚СЂРѕРєРё
+        GetWindowText(pieTextBox[i][1], buffer, length + 1); //РїРѕР»СѓС‡Р°РµРј С‚РµРєСЃС‚ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ
+        DestroyWindow(pieTextBox[i][1]); //СѓРґР°Р»СЏРµРј TextBox, С‡С‚РѕР±С‹ Р·Р°РЅРѕРІРѕ РЅР°СЂРёСЃРѕРІР°С‚СЊ РІ РґСЂСѓРіРѕРј РјРµСЃС‚Рµ
         pieTextBox[i][1] = CreateWindowEx(NULL, L"Edit", L"", WS_CHILD | WS_VISIBLE | WS_BORDER, rectClient.right - 160, 40 + i * 30, 160, 20,
             hWnd, (HMENU)pieTextBoxIDs[i][1], (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), nullptr);
         SetWindowText(pieTextBox[i][1], buffer);
@@ -197,52 +205,51 @@ void DrawTextOnPieChartPage(HWND hWnd, HDC hdc, RECT rectClient) {
 
 
     if (addButtonPie) isEnabled = IsWindowEnabled(addButtonPie);
-    if (addButtonPie) DestroyWindow(addButtonPie); //Удаление, чтобы заново нарисовать в другом месте
-    addButtonPie = CreateWindow(L"Button", L"Добавить", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 220, 40 + numPieTextBox * 30, 100, 25, hWnd,
+    if (addButtonPie) DestroyWindow(addButtonPie); //СѓРґР°Р»СЏРµРј РєРЅРѕРїРєСѓ, С‡С‚РѕР±С‹ Р·Р°РЅРѕРІРѕ РЅР°СЂРёСЃРѕРІР°С‚СЊ РІ РґСЂСѓРіРѕРј РјРµСЃС‚Рµ
+    addButtonPie = CreateWindow(L"Button", L"Р”РѕР±Р°РІРёС‚СЊ", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 220, 40 + numPieTextBox * 30, 100, 25, hWnd,
         (HMENU)ID_ADD_BUTTON_2, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
         nullptr);
     EnableWindow(addButtonPie, isEnabled);
 
     if (deleteButtonPie) isEnabled = IsWindowEnabled(deleteButtonPie);
-    if (deleteButtonPie) DestroyWindow(deleteButtonPie); //Удаление, чтобы заново нарисовать в другом месте
-    deleteButtonPie = CreateWindow(L"Button", L"Убрать", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 110, 40 + numPieTextBox * 30, 100, 25, hWnd,
+    if (deleteButtonPie) DestroyWindow(deleteButtonPie); //СѓРґР°Р»СЏРµРј РєРЅРѕРїРєСѓ, С‡С‚РѕР±С‹ Р·Р°РЅРѕРІРѕ РЅР°СЂРёСЃРѕРІР°С‚СЊ РІ РґСЂСѓРіРѕРј РјРµСЃС‚Рµ
+    deleteButtonPie = CreateWindow(L"Button", L"РЈР±СЂР°С‚СЊ", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 110, 40 + numPieTextBox * 30, 100, 25, hWnd,
         (HMENU)ID_DELETE_BUTTON_2, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
         nullptr);
     EnableWindow(deleteButtonPie, isEnabled);
 
-    if (createButtonPie) DestroyWindow(createButtonPie); //Удаление, чтобы заново нарисовать в другом месте
-    createButtonPie = CreateWindow(L"Button", L"Построить", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 220, 40 + (numPieTextBox + 1) * 30, 210, 25, hWnd,
+    if (createButtonPie) DestroyWindow(createButtonPie); //СѓРґР°Р»СЏРµРј РєРЅРѕРїРєСѓ, С‡С‚РѕР±С‹ Р·Р°РЅРѕРІРѕ РЅР°СЂРёСЃРѕРІР°С‚СЊ РІ РґСЂСѓРіРѕРј РјРµСЃС‚Рµ
+    createButtonPie = CreateWindow(L"Button", L"РџРѕСЃС‚СЂРѕРёС‚СЊ", WS_VISIBLE | WS_CHILD | WS_BORDER, rectClient.right - 220, 40 + (numPieTextBox + 1) * 30, 210, 25, hWnd,
         (HMENU)ID_CREATE_BUTTON_2, (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE),
         nullptr);
 
-    DeleteObject(hFont); // Освобождение шрифта
+    DeleteObject(hFont); //СѓРґР°Р»СЏРµРј С€СЂРёС„С‚
 }
 
 int getPieChartData()
 {
     wchar_t message[1024] = L"";
 
-    bool error = false; //флаг ошибки данных
-    int length; //длина текста в TextBox
-
-    double* tempArr = new double[numPieTextBox];
+    bool error = false; //С„Р»Р°Рі РЅР°Р»РёС‡РёСЏ РѕС€РёР±РєРё РІ РІРІРµРґРµРЅРЅС‹С… РґР°РЅРЅС‹С…
+    int length; //РґР»РёРЅР° С‚РµРєСЃС‚Р° РІ TextBox
+    double* tempArr = new double[numPieTextBox]; //РІСЂРµРјРµРЅРЅС‹Р№ РјР°СЃСЃРёРІ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…
 
     for (int i = 0; i < numPieTextBox; i++) {
-        length = GetWindowTextLength(pieTextBox[i][0]); //получаем длину
-        TCHAR* buffer1 = new TCHAR[length + 1]; // создаем буфер для хранения текста
-        GetWindowText(pieTextBox[i][0], buffer1, length + 1); // получаем текст из текстового поля
+        length = GetWindowTextLength(pieTextBox[i][0]); //РїРѕР»СѓС‡Р°РµРј РґР»РёРЅСѓ
+        TCHAR* buffer1 = new TCHAR[length + 1]; //СЃРѕР·РґР°РµРј Р±СѓС„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃС‚СЂРѕРєРё
+        GetWindowText(pieTextBox[i][0], buffer1, length + 1); // РїРѕР»СѓС‡Р°РµРј С‚РµРєСЃС‚ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ
 
-        //проверяем корректность значений
+        //РїСЂРѕРІРµСЂСЏРµРј РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ РІРІРµРґРµРЅРЅС‹С… РґР°РЅРЅС‹С…
         if ((containsLetters(buffer1) == true) || (wcslen(buffer1) == 0)) {
             error = true;
             const wchar_t* str;
             if (containsLetters(buffer1) == true) {
-                str = L"Значение некорректно:\tстрока ";
+                str = L"Р—РЅР°С‡РµРЅРёРµ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕ:\tСЃС‚СЂРѕРєР° ";
             }
             else {
-                str = L"Значение отсутствует:\tстрока ";
+                str = L"Р—РЅР°С‡РµРЅРёРµ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚:\tСЃС‚СЂРѕРєР° ";
             }
-            wchar_t numStr[10]; // буфер для числа
+            wchar_t numStr[10]; //Р±СѓС„РµСЂ РґР»СЏ С‡РёСЃР»Р°
             swprintf(numStr, sizeof(numStr) / sizeof(numStr[0]), L"%d", i + 1);
             wcscat_s(message, 1024, str);
             wcscat_s(message, 1024, numStr);
@@ -253,52 +260,52 @@ int getPieChartData()
             if (tempArr[i] <= 0) {
                 error = true;
                 const wchar_t* str;
-                str = L"Значение меньше/равно 0:\tстрока ";
-                wchar_t numStr[10]; // буфер для числа
+                str = L"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅ 0:\tпїЅпїЅпїЅпїЅпїЅпїЅ ";
+                wchar_t numStr[10]; //Р±СѓС„РµСЂ РґР»СЏ С‡РёСЃР»Р°
                 swprintf(numStr, sizeof(numStr) / sizeof(numStr[0]), L"%d", i + 1);
                 wcscat_s(message, 1024, str);
                 wcscat_s(message, 1024, numStr);
                 wcscat_s(message, 1024, L"\n");
             }
         }
-        delete[] buffer1; //освобождаем память
+        delete[] buffer1; //СѓРґР°СЏРµРј Р±СѓС„РµСЂ
 
-        //проверяем наличие названий
-        length = GetWindowTextLength(pieTextBox[i][1]); //получаем длину
-        TCHAR* buffer2 = new TCHAR[length + 1]; // создаем буфер для хранения текста
-        GetWindowText(pieTextBox[i][1], buffer2, length + 1); // получаем текст из текстового поля
-        if (wcslen(buffer2) == 0) { //проверяем на пустоту
+        //РїСЂРѕРІРµСЂСЏРµРј РЅР°Р·РІР°РЅРёСЏ РЅР° РїСѓСЃС‚РѕС‚Сѓ
+        length = GetWindowTextLength(pieTextBox[i][1]); //РїРѕР»СѓС‡Р°РµРј РґР»РёРЅСѓ
+        TCHAR* buffer2 = new TCHAR[length + 1]; //СЃРѕР·РґР°РµРј Р±СѓС„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃС‚СЂРѕРєРё
+        GetWindowText(pieTextBox[i][1], buffer2, length + 1); //РїРѕР»СѓС‡Р°РµРј РґР°РЅРЅС‹Рµ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ
+        if (wcslen(buffer2) == 0) { //РµСЃР»Рё РЅР°Р·РІР°РЅРёРµ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚
             error = true;
             const wchar_t* str;
-            // Пример строки для добавления в массив
-            str = L"Название отсутствует:\tстрока ";
-            wchar_t numStr[10]; // буфер для числа
+            //РґРѕР±Р°РІР»СЏРµРј РЅР°Р·РІР°РЅРёРµ РѕС€РёР±РєРё Рє СЃРѕРѕР±С‰РµРЅРёСЋ
+            str = L"РќР°Р·РІР°РЅРёРµ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚:\tСЃС‚СЂРѕРєР° ";
+            wchar_t numStr[10]; //Р±СѓС„РµСЂ РґР»СЏ С‡РёСЃР»Р°
             swprintf(numStr, sizeof(numStr) / sizeof(numStr[0]), L"%d", i + 1);
             wcscat_s(message, 1024, str);
             wcscat_s(message, 1024, numStr);
             wcscat_s(message, 1024, L"\n");
         }
-        delete[] buffer2; //освобождаем память
+        delete[] buffer2; //СѓРґР°Р»СЏРµРј Р±СѓС„РµСЂ
     }
-    if (error) { //если данные некорректны
-        MessageBox(NULL, message, L"Ошибка", MB_ICONEXCLAMATION | MB_OK); // сообщение об ошибке
+    if (error) { //РµСЃР»Рё РґР°РЅРЅС‹Рµ РЅРµРєРѕСЂСЂРµРєС‚РЅС‹
+        MessageBox(NULL, message, L"РћС€РёР±РєР°", MB_ICONEXCLAMATION | MB_OK); //СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ
         delete[] tempArr;
         return 1;
     }
-    else { // если данные корректны
-        //меняем массив
-        delete[] pieData; //удаляем старый
-        pieData = new double[numPieTextBox + 1]; //создаем новый
+    else { //РґР°РЅРЅС‹Рµ РєРѕСЂСЂРµРєС‚РЅС‹
+        //СЃРѕР·РґР°РµРј РЅРѕРІС‹Р№ РјР°СЃСЃРёРІ РґР°РЅРЅС‹С…
+        delete[] pieData; //СѓРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Р№
+        pieData = new double[numPieTextBox + 1]; //СЃРѕР·РґР°РµРј РЅРѕРІС‹Р№
+        //РїРµСЂРµРЅРѕСЃРёРј РґР°РЅРЅС‹Р№ РІ РѕСЃРЅРѕРІРЅРѕР№ РјР°СЃСЃРёРІ РёР· РІСЂРµРјРµРЅРЅРѕРіРѕ
         for (int i = 0; i < numPieTextBox; i++) {
             pieData[i + 1] = tempArr[i];
         }
         delete[] tempArr;
 
-        //находим вмаксимал
+        //пїЅРЅР°С…РѕРґРёРј СЃСѓРјРјСѓ Р·РЅР°С‡РµРЅРёР№
         double sum = 0;
-        //double max = -1; //инициализируем переменную для поиска максимума
-        for (int i = 0; i < numPieTextBox; i++) sum += pieData[i + 1]; //находим сумму
-        pieData[0] = sum;
+        for (int i = 0; i < numPieTextBox; i++) sum += pieData[i + 1]; //СЃС‡РёС‚Р°РµРј СЃСѓРјРјСѓ
+        pieData[0] = sum; //Р·Р°РЅРѕСЃРёРј СЃСѓРјРјСѓ РІ РѕР±С‰РёР№ РјР°СЃСЃРёРІ РґР°РЅРЅС‹С…
         
         return 0;
     }
