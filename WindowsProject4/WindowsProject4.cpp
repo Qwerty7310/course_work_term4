@@ -42,8 +42,8 @@ int numHistTextBox = 3;
 //	{3041, 3042}
 //};
 int numHistColumns = 3;
-HWND histTextBox[5][2];
-TCHAR* histText[5][2];
+HWND histTextBox[20][2];
+TCHAR* histText[20][2];
 
 HWND addButtonHist;
 HWND deleteButtonHist;
@@ -53,9 +53,10 @@ HWND downButtonHist;
 HWND hChildHistPage;
 
 int histChildScroll = 0;
+int curHistChildWidth;
 
 bool flagDrawHist = false;
-double maxLevel;
+double maxHistLevel;
 double* histData; // массив данных для построения гистограммы
 
 //для построения диаграммы
@@ -199,7 +200,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	RegisterChildClass(hInstance, L"DiagramPage", DiagramPageProc);
 	RegisterChildClass(hInstance, L"HodographPage", HodographPageProc);
 	RegisterChildClass(hInstance, L"ChildDiaPage", ChildDiaPageProc);
-	//RegisterChildClass(hInstance, L"ChildHistPage", ChildHistPageProc);
+	RegisterChildClass(hInstance, L"ChildHistPage", ChildHistPageProc);
 
 	// Создание окна
 	if (!InitInstance(hInstance, nCmdShow))

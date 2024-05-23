@@ -52,6 +52,7 @@ LRESULT CALLBACK DiagramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 				DrawText(hdc, L"Введите Ваши данные для\n построения диаграммы.", -1, &rectText,
 				         DT_WORDBREAK | DT_CENTER);
+				DeleteObject(hFont);
 			}
 			EndPaint(hDiagramPage, &ps);
 			break;
@@ -91,18 +92,17 @@ void DrawDiagram(HDC hdc, RECT rectClient)
 	//горизонтальная линия уровня гистограммы
 	DeleteObject(hpen);
 
+	//создаем шрифт
+	HFONT hFont = CreateFont(16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+	                         OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+	                         DEFAULT_PITCH | FF_SWISS, L"Arial");
+
+	SetTextColor(hdc, RGB(0, 0, 0)); //выбираем цвет текста
+	SelectObject(hdc, hFont); //выбираем шрифт
+	SetBkMode(hdc, TRANSPARENT); //прозрачный фон
 	//добавляем шкалу гистограммы
 	for (int i = 0; i <= 5; i++)
 	{
-		//создаем шрифт
-		HFONT hFont = CreateFont(16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
-		                         OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-		                         DEFAULT_PITCH | FF_SWISS, L"Arial");
-
-		SetTextColor(hdc, RGB(0, 0, 0)); //выбираем цвет текста
-		SelectObject(hdc, hFont); //выбираем шрифт
-		SetBkMode(hdc, TRANSPARENT); //прозрачный фон
-
 		RECT rectText = {0, rectClient.bottom - 30 - i * interval - 10, 35, rectClient.bottom - 30 - i * interval + 10};
 
 		TCHAR str1[20];
@@ -113,12 +113,12 @@ void DrawDiagram(HDC hdc, RECT rectClient)
 
 		DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_RIGHT); //рисуем текст
 	}
+	DeleteObject(hFont);
 
 	//выбираем шрифт
-	HFONT hFont = CreateFont(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
-	                         OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-	                         DEFAULT_PITCH | FF_SWISS, L"Arial");
-
+	hFont = CreateFont(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+	                   OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+	                   DEFAULT_PITCH | FF_SWISS, L"Arial");
 	SetTextColor(hdc, RGB(0, 0, 0)); //выбираем цвет
 	SelectObject(hdc, hFont); //выбираем шрифт
 	SetBkMode(hdc, TRANSPARENT); //прозрачный фон
@@ -154,6 +154,7 @@ void DrawDiagram(HDC hdc, RECT rectClient)
 			swprintf_s(numStr, L"%.2lf", diaData[i]); //дробное число
 		DrawText(hdc, numStr, -1, &rectText, DT_WORDBREAK | DT_CENTER); //рисуем текст
 	}
+	DeleteObject(hFont);
 
 	//добавляем подписи к стобцам
 	hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,

@@ -1,89 +1,26 @@
 ﻿  HistogramPage.cpp
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(5,7): warning C4101: state: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(6,6): warning C4101: length: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(141,20): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(75,14): warning C4101: max: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(75,9): warning C4101: min: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(130,6): warning C4101: length: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(310,47): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(354,7): warning C4101: state: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(479,9): warning C4101: hStaticText: неиспользованная локальная переменная
-  WindowsProject4.cpp
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(49,1): warning C4005: ID_TEXTBOX_0_1: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(25,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
+  (компиляция исходного файла "HistogramPage.cpp")
   C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(13,1):
-  см. предыдущее определение "ID_TEXTBOX_0_1"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(50,1): warning C4005: ID_TEXTBOX_1_1: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(14,1):
-  см. предыдущее определение "ID_TEXTBOX_1_1"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(51,1): warning C4005: ID_TEXTBOX_2_1: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(15,1):
-  см. предыдущее определение "ID_TEXTBOX_2_1"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(52,1): warning C4005: ID_TEXTBOX_3_1: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(16,1):
-  см. предыдущее определение "ID_TEXTBOX_3_1"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(53,1): warning C4005: ID_TEXTBOX_4_1: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(17,1):
-  см. предыдущее определение "ID_TEXTBOX_4_1"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(55,1): warning C4005: ID_TEXTBOX_0_2: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(19,1):
-  см. предыдущее определение "ID_TEXTBOX_0_2"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(56,1): warning C4005: ID_TEXTBOX_1_2: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(20,1):
-  см. предыдущее определение "ID_TEXTBOX_1_2"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(57,1): warning C4005: ID_TEXTBOX_2_2: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(21,1):
-  см. предыдущее определение "ID_TEXTBOX_2_2"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(58,1): warning C4005: ID_TEXTBOX_3_2: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(22,1):
-  см. предыдущее определение "ID_TEXTBOX_3_2"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(59,1): warning C4005: ID_TEXTBOX_4_2: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(23,1):
-  см. предыдущее определение "ID_TEXTBOX_4_2"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(61,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(25,1):
   см. предыдущее определение "ID_ADD_BUTTON"
   
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(62,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(26,1):
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(26,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
+  (компиляция исходного файла "HistogramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(14,1):
   см. предыдущее определение "ID_DELETE_BUTTON"
   
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(63,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(27,1):
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(27,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
+  (компиляция исходного файла "HistogramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(15,1):
   см. предыдущее определение "ID_CREATE_BUTTON"
   
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(64,1): warning C4005: ID_UP_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(28,1):
-  см. предыдущее определение "ID_UP_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(65,1): warning C4005: ID_DOWN_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(29,1):
-  см. предыдущее определение "ID_DOWN_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(372,9): warning C4101: r: неиспользованная локальная переменная
-  Создание кода...
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(5,7): warning C4101: state: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(6,6): warning C4101: length: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(140,20): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(76,14): warning C4101: max: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(76,9): warning C4101: min: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(129,6): warning C4101: length: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(316,47): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(360,7): warning C4101: state: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(486,8): warning C4101: hStaticText: неиспользованная локальная переменная
   WindowsProject4.vcxproj -> C:\Users\daniil\source\repos\WindowsProject4\Debug\WindowsProject4.exe

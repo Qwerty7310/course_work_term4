@@ -46,17 +46,17 @@ extern WNDPROC g_pChildPageProc; // Объявление и инициализа
 //HWND deleteButton;
 //HWND createButton;
 
-#define ID_TEXTBOX_0_1 5001
-#define ID_TEXTBOX_1_1 5011
-#define ID_TEXTBOX_2_1 5021
-#define ID_TEXTBOX_3_1 5031
-#define ID_TEXTBOX_4_1 5041
-
-#define ID_TEXTBOX_0_2 5002
-#define ID_TEXTBOX_1_2 5012
-#define ID_TEXTBOX_2_2 5022
-#define ID_TEXTBOX_3_2 5032
-#define ID_TEXTBOX_4_2 5042
+//#define ID_TEXTBOX_0_1 5001
+//#define ID_TEXTBOX_1_1 5011
+//#define ID_TEXTBOX_2_1 5021
+//#define ID_TEXTBOX_3_1 5031
+//#define ID_TEXTBOX_4_1 5041
+//
+//#define ID_TEXTBOX_0_2 5002
+//#define ID_TEXTBOX_1_2 5012
+//#define ID_TEXTBOX_2_2 5022
+//#define ID_TEXTBOX_3_2 5032
+//#define ID_TEXTBOX_4_2 5042
 
 #define ID_ADD_BUTTON 6001
 #define ID_DELETE_BUTTON 6002
