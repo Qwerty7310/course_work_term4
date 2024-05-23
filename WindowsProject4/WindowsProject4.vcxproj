@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="DiagramPage.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="FrequencyPage.h" />
     <ClInclude Include="GraphPage.h" />
     <ClInclude Include="HistogramPage.h" />
     <ClInclude Include="PieChartPage.h" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DiagramPage.cpp" />
+    <ClCompile Include="FrequencyPage.cpp" />
     <ClCompile Include="GraphPage.cpp" />
     <ClCompile Include="HistogramPage.cpp" />
     <ClCompile Include="PieChartPage.cpp" />

@@ -1,26 +1,30 @@
-﻿  HistogramPage.cpp
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(25,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
-  (компиляция исходного файла "HistogramPage.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(13,1):
+﻿  FrequencyPage.cpp
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(25,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
+  (компиляция исходного файла "FrequencyPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(13,1):
   см. предыдущее определение "ID_ADD_BUTTON"
   
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(26,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "HistogramPage.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(14,1):
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(26,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
+  (компиляция исходного файла "FrequencyPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(14,1):
   см. предыдущее определение "ID_DELETE_BUTTON"
   
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(27,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "HistogramPage.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(15,1):
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(27,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
+  (компиляция исходного файла "FrequencyPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(15,1):
   см. предыдущее определение "ID_CREATE_BUTTON"
   
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(5,7): warning C4101: state: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(6,6): warning C4101: length: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(140,20): warning C4244: =: преобразование "double" в "LONG", возможна потеря данных
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(76,14): warning C4101: max: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(76,9): warning C4101: min: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(129,6): warning C4101: length: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(316,47): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(360,7): warning C4101: state: неиспользованная локальная переменная
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.cpp(486,8): warning C4101: hStaticText: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(5,7): warning C4101: state: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(6,6): warning C4101: length: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(217,17): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(223,17): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(237,25): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(242,25): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(258,183): warning C4804: >: небезопасное использование типа "bool" в операции
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(77,14): warning C4101: max: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(77,9): warning C4101: min: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(331,11): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(363,47): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(409,7): warning C4101: state: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(536,9): warning C4101: hStaticText: неиспользованная локальная переменная
   WindowsProject4.vcxproj -> C:\Users\daniil\source\repos\WindowsProject4\Debug\WindowsProject4.exe

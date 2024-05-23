@@ -32,7 +32,7 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         // Создание текста
         RECT rectText = { 0, 0, 0, 0 }; // Размеры и позиция будут уточнены позже в WM_SIZE
         HWND hStaticText = CreateWindowEx(0, L"STATIC", L"Выберите графики,\nкоторые вы хотите\nпостроить:",
-            WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 0, 0, hWnd, NULL, NULL, NULL);
+            WS_CHILD | WS_VISIBLE | SS_CENTER, 0, 0, 0, 0, hWnd, NULL, NULL, NULL);
 
         SendMessage(hStaticText, WM_SETFONT, (WPARAM)hFont, TRUE);
 

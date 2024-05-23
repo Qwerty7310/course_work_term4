@@ -2,6 +2,7 @@
 #include "HistogramPage.h"
 #include "DiagramPage.h"
 #include "PieChartPage.h"
+#include "FrequencyPage.h"
 
 // Глобальные переменные
 HINSTANCE hInst;
@@ -14,6 +15,7 @@ HWND hHistogramPage;
 HWND hPieChartPage;
 HWND hDiagramPage;
 HWND hHodographPage;
+HWND hFrequencyPage;
 
 WNDPROC g_pTabCtrlProc = nullptr; // Объявление и инициализация указателя
 WNDPROC g_pGraphPageProc = nullptr; // Объявление и инициализация указателя
@@ -22,8 +24,10 @@ WNDPROC g_pHistogramPageProc = nullptr; // Объявление и инициа�
 WNDPROC g_pPieChartPageProc = nullptr; // Объявление и инициализация указателя
 WNDPROC g_pDiagramPageProc = nullptr; // Объявление и инициализация указателя
 WNDPROC g_pHodographPageProc = nullptr; // Объявление и инициализация указателя
-WNDPROC g_pChildDiaPageProc; // Объявление и инициализация указателя
-WNDPROC g_pChildHistPageProc; // Объявление и инициализация указателя
+WNDPROC g_pFrequencyPageProc = nullptr; // Объявление и инициализация указателя
+WNDPROC g_pChildDiaPageProc = nullptr; // Объявление и инициализация указателя
+WNDPROC g_pChildHistPageProc = nullptr; // Объявление и инициализация указателя
+WNDPROC g_pChildFreqPageProc = nullptr; // Объявление и инициализация указателя
 
 //Для построения графиков
 LPCWSTR CheckBoxNames[3] = {L"y = cos(x)", L"y = πx / 10 - 1", L"y = sin(x)"};
@@ -108,6 +112,28 @@ HWND createButtonPie;
 bool flagDrawPie = false;
 double* pieData; // массив данных для построения гистограммы
 
+//Для построения частотной характеристики
+ int freqChildScroll = 0;
+ int numFreqTextBox = 3;
+int numFreqColumns = 3;
+HWND freqTextBox[20][2];
+TCHAR* freqText[20][2];
+
+ HWND addButtonFreq;
+ HWND deleteButtonFreq;
+ HWND createButtonFreq;
+ HWND upButtonFreq;
+ HWND downButtonFreq;
+
+ HWND hChildFreqPage;
+ int curFreqChildWidth;
+
+ bool flagDrawFreq;
+ double maxFreqLevel;
+ double* freqData; // массив данных для построения гистограммы
+ double maxPos;
+ double minNig;
+
 
 // Прототипы функций
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
@@ -119,6 +145,7 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK DiagramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK HodographPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK FrequencyPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); //отрезок прямой
 bool containsLetters(TCHAR* str); //проверка на буквы
@@ -135,7 +162,6 @@ int colors[15] = {
 	RGB(96, 0, 96),
 	RGB(51, 255, 255),
 	RGB(255, 153, 255),
-
 	RGB(0, 139, 139),
 	RGB(255, 228, 181),
 	RGB(218, 112, 214),
@@ -199,8 +225,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	RegisterChildClass(hInstance, L"PieChartPage", PieChartPageProc);
 	RegisterChildClass(hInstance, L"DiagramPage", DiagramPageProc);
 	RegisterChildClass(hInstance, L"HodographPage", HodographPageProc);
+	RegisterChildClass(hInstance, L"FrequencyPage", FrequencyPageProc);
 	RegisterChildClass(hInstance, L"ChildDiaPage", ChildDiaPageProc);
 	RegisterChildClass(hInstance, L"ChildHistPage", ChildHistPageProc);
+	RegisterChildClass(hInstance, L"ChildFreqPage", ChildFreqPageProc);
 
 	// Создание окна
 	if (!InitInstance(hInstance, nCmdShow))
@@ -266,6 +294,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						ShowWindow(hDiagramPage, SW_HIDE);
 						ShowWindow(hPieChartPage, SW_HIDE);
 						ShowWindow(hHodographPage, SW_HIDE);
+						ShowWindow(hFrequencyPage, SW_HIDE);
 						break;
 					case 1:
 						ShowWindow(hGraphPage, SW_HIDE);
@@ -274,6 +303,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						ShowWindow(hDiagramPage, SW_HIDE);
 						ShowWindow(hPieChartPage, SW_HIDE);
 						ShowWindow(hHodographPage, SW_HIDE);
+						ShowWindow(hFrequencyPage, SW_HIDE);
 						break;
 					case 2:
 						ShowWindow(hGraphPage, SW_HIDE);
@@ -282,6 +312,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						ShowWindow(hDiagramPage, SW_HIDE);
 						ShowWindow(hPieChartPage, SW_HIDE);
 						ShowWindow(hHodographPage, SW_HIDE);
+						ShowWindow(hFrequencyPage, SW_HIDE);
 						break;
 					case 3:
 						ShowWindow(hGraphPage, SW_HIDE);
@@ -290,6 +321,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						ShowWindow(hDiagramPage, SW_SHOW);
 						ShowWindow(hPieChartPage, SW_HIDE);
 						ShowWindow(hHodographPage, SW_HIDE);
+						ShowWindow(hFrequencyPage, SW_HIDE);
 						break;
 					case 4:
 						ShowWindow(hGraphPage, SW_HIDE);
@@ -298,6 +330,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						ShowWindow(hDiagramPage, SW_HIDE);
 						ShowWindow(hPieChartPage, SW_SHOW);
 						ShowWindow(hHodographPage, SW_HIDE);
+						ShowWindow(hFrequencyPage, SW_HIDE);
 						break;
 					case 5:
 						ShowWindow(hGraphPage, SW_HIDE);
@@ -306,6 +339,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						ShowWindow(hDiagramPage, SW_HIDE);
 						ShowWindow(hPieChartPage, SW_HIDE);
 						ShowWindow(hHodographPage, SW_SHOW);
+						ShowWindow(hFrequencyPage, SW_HIDE);
+						break;
+					case 6:
+						ShowWindow(hGraphPage, SW_HIDE);
+						ShowWindow(hRandomGraphPage, SW_HIDE);
+						ShowWindow(hHistogramPage, SW_HIDE);
+						ShowWindow(hDiagramPage, SW_HIDE);
+						ShowWindow(hPieChartPage, SW_HIDE);
+						ShowWindow(hHodographPage, SW_HIDE);
+						ShowWindow(hFrequencyPage, SW_SHOW);
 						break;
 					}
 
@@ -327,6 +370,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			hPieChartPage = CreateWindow(L"PieChartPage", L"", WS_CHILD | WS_VISIBLE, 0, 20, 760, 540, hWnd, NULL, hInst, NULL);
 			hDiagramPage = CreateWindow(L"DiagramPage", L"", WS_CHILD | WS_VISIBLE, 0, 20, 760, 540, hWnd, NULL, hInst, NULL);
 			hHodographPage = CreateWindow(L"HodographPage", L"", WS_CHILD | WS_VISIBLE, 0, 20, 760, 540, hWnd, NULL, hInst, NULL);
+			if (!hHodographPage)
+				MessageBox(NULL, L"Hodograph", L"Ошибка", MB_ICONEXCLAMATION | MB_OK); //выводим сообщение об ошибке
+			hFrequencyPage = CreateWindow(L"FrequencyPage", L"", WS_CHILD | WS_VISIBLE, 0, 20, 760, 540, hWnd, NULL, hInst, NULL);
+			if (!hFrequencyPage)
+				MessageBox(NULL, L"Frequency", L"Ошибка", MB_ICONEXCLAMATION | MB_OK); //выводим сообщение об ошибке
 
 			// Добавляем вкладки на TabControl и связываем их с соответствующими окнами
 			TCITEM tie;
@@ -356,12 +404,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			tie.lParam = (LPARAM)hHodographPage;
 			TabCtrl_InsertItem(hTabControl, 5, &tie);
 
+			tie.pszText = const_cast<LPTSTR>(L"Частотная характеристика");
+			tie.lParam = (LPARAM)hFrequencyPage;
+			TabCtrl_InsertItem(hTabControl, 6, &tie);
+
 			ShowWindow(hGraphPage, SW_SHOW);
 			ShowWindow(hRandomGraphPage, SW_HIDE);
 			ShowWindow(hHistogramPage, SW_HIDE);
 			ShowWindow(hDiagramPage, SW_HIDE);
 			ShowWindow(hPieChartPage, SW_HIDE);
 			ShowWindow(hHodographPage, SW_HIDE);
+			ShowWindow(hFrequencyPage, SW_HIDE);
 
 			break;
 		}
@@ -400,6 +453,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			SetWindowPos(hPieChartPage, NULL, 15, 60, rcClient.right - 30, rcClient.bottom - 85, SWP_NOZORDER);
 			SetWindowPos(hDiagramPage, NULL, 15, 60, rcClient.right - 30, rcClient.bottom - 85, SWP_NOZORDER);
 			SetWindowPos(hHodographPage, NULL, 15, 60, rcClient.right - 30, rcClient.bottom - 85, SWP_NOZORDER);
+			SetWindowPos(hFrequencyPage, NULL, 15, 60, rcClient.right - 30, rcClient.bottom - 85, SWP_NOZORDER);
 			break;
 		}
 	case WM_GETMINMAXINFO:
