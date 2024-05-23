@@ -1,58 +1,29 @@
-//#pragma once
-
 #include <windows.h>
-#include <CommCtrl.h> // Для использования элемента управления TabControl
-#include <vector> // Для работы с данными для графиков и диаграмм
-#include <cmath> // Для математических функций
+#include <CommCtrl.h> // Р”Р»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ СЌР»РµРјРµРЅС‚Р° СѓРїСЂР°РІР»РµРЅРёСЏ TabControl
+#include <vector> // Р”Р»СЏ СЂР°Р±РѕС‚С‹ СЃ РґР°РЅРЅС‹РјРё РґР»СЏ РіСЂР°С„РёРєРѕРІ Рё РґРёР°РіСЂР°РјРј
+#include <cmath> // Р”Р»СЏ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРёС… С„СѓРЅРєС†РёР№
 #include <tchar.h>
 #include <string>
 
-#pragma comment(lib, "Comctl32.lib") // Подключаем Comctl32.lib
+#pragma comment(lib, "Comctl32.lib") // РџРѕРґРєР»СЋС‡Р°РµРј Comctl32.lib
 
-//#define IDC_TABCONTROL 1001 // Примерный номер идентификатора для TabControl
 #define ID_CHECKBOX_1 2001
 #define ID_CHECKBOX_2 2002
 #define ID_CHECKBOX_3 2003
 
-// Глобальные переменные
+// РѕР±СЉСЏРІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹С…
 extern HINSTANCE hInst;
-//extern HWND hTabControl;
 extern HWND hGraphPage;
-//extern HWND hButton;
 extern LPCWSTR CheckBoxNames[3];
 extern int CheckBoxIDs[3];
 extern HWND CheckBox[3];
-extern WNDPROC g_pGraphPageProc; // Объявление и инициализация указателя
+extern WNDPROC g_pGraphPageProc; //СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С„СѓРЅРєС†РёСЋ РѕР±СЂР°Р±РѕС‚РєРё РѕРєРЅР°
+extern double** x; //РјР°СЃСЃРёРІ РґР°РЅРЅС‹С… РґР»СЏ РїРѕСЃС‚СЂРѕРµРЅРёСЏ РіСЂР°С„РёРєРѕРІ
+extern const int NUM; // РєРѕР»РёС‡РµСЃС‚Рѕ С‚РѕС‡РµРє РґР»СЏ РїРѕСЃС‚СЂРѕРµРЅРёСЏ РіСЂР°С„РёРєР°
 
-// Прототипы функций
-//BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
-//LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-//LRESULT CALLBACK TabControlProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-/// <summary>
-/// Процедура окна
-/// </summary>
-/// <param name="hWnd"></param>
-/// <param name="message"></param>
-/// <param name="wParam"></param>
-/// <param name="lParam"></param>
-/// <returns></returns>
+// РїСЂРѕС‚РѕС‚РёРїС‹ С„СѓРЅРєС†РёР№
 LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-//LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-//LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // рисование отрезка прямой линии
-
+void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // С„СѓРЅРєС†РёСЏ СЂРёСЃРѕРІР°РЅРёСЏ РїСЂСЏРјРѕР№ Р»РёРЅРёРё
 void DrawGraph(HDC hdc, RECT rectClient, double** x, int n, int numrow);
-void DrawTextOnGraphPage(HDC hdc, RECT rectClient); // текст
-//void DrawHistogram(HWND hWnd);
-//void DrawPieChart(HWND hWnd);
+void DrawTextOnGraphPage(HDC hdc, RECT rectClient); // С„СѓРЅРєС†РёСЏ СЂРёСЃРѕРІР°РЅРёСЏ С‚РµРєСЃС‚Р°
 double** getGraphData(int size);
-//int p = 0;
-
-
-extern double** x; // массив данных, глобальный
-
-extern const int NUM; // Примерное количество точек для графика
-
-//extern HDC hdc;

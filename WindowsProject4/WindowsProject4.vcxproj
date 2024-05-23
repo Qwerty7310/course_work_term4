@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DiagramPage.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphPage.h" />
     <ClInclude Include="HistogramPage.h" />
@@ -148,6 +149,7 @@
     <ClInclude Include="WindowsProject4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DiagramPage.cpp" />
     <ClCompile Include="GraphPage.cpp" />
     <ClCompile Include="HistogramPage.cpp" />
     <ClCompile Include="PieChartPage.cpp" />

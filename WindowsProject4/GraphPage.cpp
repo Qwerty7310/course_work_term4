@@ -8,11 +8,57 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
     switch (message)
     {
+    case WM_CREATE:
+    {
+        OutputDebugString(L"GraphPage_WM_CREATE\n");
+
+        // Получите дескриптор контекста устройства для рисования
+        HDC hdc = GetDC(hWnd);
+
+        // Создание шрифта
+        HFONT hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+            OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+            DEFAULT_PITCH | FF_SWISS, L"Arial");
+
+        // Выбор цвета текста
+        SetTextColor(hdc, RGB(100, 100, 100));
+
+        // Выбор шрифта
+        SelectObject(hdc, hFont);
+
+        // Установка режима фона
+        SetBkMode(hdc, TRANSPARENT);
+
+        // Создание текста
+        RECT rectText = { 0, 0, 0, 0 }; // Размеры и позиция будут уточнены позже в WM_SIZE
+        HWND hStaticText = CreateWindowEx(0, L"STATIC", L"Выберите графики,\nкоторые вы хотите\nпостроить:",
+            WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 0, 0, hWnd, NULL, NULL, NULL);
+
+        SendMessage(hStaticText, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+        // Сохранение дескриптора текста в пользовательских данных окна
+        SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)hStaticText);
+
+        // Создайте чекбоксы
+        for (int i = 0; i < 3; ++i) {
+            CheckBox[i] = CreateWindow(L"BUTTON", CheckBoxNames[i], WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
+                0, 0, 0, 0, hWnd, (HMENU)CheckBoxIDs[i], NULL, NULL);
+            if (!CheckBox[i]) {
+                MessageBox(NULL, L"Не удалось создать чекбокс", L"Ошибка", MB_ICONEXCLAMATION | MB_OK);
+                break;
+            }
+        }
+
+        // Освободите контекст устройства
+        ReleaseDC(hWnd, hdc);
+
+        break;
+    }
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hGraphPage, &ps);
-        OutputDebugString(L"WM_PAINT_123!\n");
+        OutputDebugString(L"GraphPage_WM_PAINT\n");
 
         RECT rect;
         GetClientRect(hWnd, &rect);
@@ -20,7 +66,6 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
         SetTextColor(hdc, 0x00FF0000); //выбираем цвет
         DrawGraph(hdc, ps.rcPaint, x, NUM, 3); //рисуем графики
-        DrawTextOnGraphPage(hdc, ps.rcPaint); //рисуем текст
         EndPaint(hGraphPage, &ps);
         break;
     }
@@ -40,6 +85,43 @@ LRESULT CALLBACK GraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         }
     }
     break;
+    case WM_CTLCOLORBTN: {
+        HDC hdcStatic = (HDC)wParam;
+        SetTextColor(hdcStatic, TRANSPARENT);
+        SetBkColor(hdcStatic, RGB(255, 255, 255));
+        return (LRESULT)CreateSolidBrush(RGB(255, 255, 255));
+    }
+    case WM_SIZE:
+    {
+        RECT rectClient;
+        GetClientRect(hWnd, &rectClient);
+
+        // Получение дескриптора текста из пользовательских данных окна
+        HWND hStaticText = (HWND)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        if (hStaticText)
+        {
+            // Установка размеров и позиции текста относительно правой границы
+            SetWindowPos(hStaticText, HWND_TOP, rectClient.right - 170, 20, 160, rectClient.bottom, SWP_SHOWWINDOW);
+        }
+
+        // Получаем новые размеры окна
+        int newWidth = LOWORD(lParam);
+        int newHeight = HIWORD(lParam);
+
+        // Определите координаты X и Y для первого чекбокса
+        int startX = newWidth - 145; // Расстояние от правого края окна
+        int startY = 100;
+        int checkBoxWidth = 150;
+        int checkBoxHeight = 30;
+        int checkBoxSpacing = 10;
+
+        // Переместите каждый чекбокс на новые координаты
+        for (int i = 0; i < 3; ++i) {
+            SetWindowPos(CheckBox[i], NULL, startX, startY + i * (checkBoxHeight + checkBoxSpacing), checkBoxWidth, checkBoxHeight, SWP_NOZORDER);
+        }
+
+        break;
+    }
     case WM_COMMAND:
     {
         //фиксируем нажатие на CheckBox'ы
@@ -166,34 +248,6 @@ void DrawGraph(HDC hdc, RECT rectClient, double** x,
         }
         color = color >> 8; //сдвигаем цвет на один для следующего графика
     }
-}
-
-void DrawTextOnGraphPage(HDC hdc, RECT rectClient) {
-    UINT state;
-
-    //создаем шрифт
-    HFONT hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
-        OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-        DEFAULT_PITCH | FF_SWISS, L"Arial");
-
-    SetTextColor(hdc, RGB(100, 100, 100)); //выбираем цвет
-    SelectObject(hdc, hFont); //выбираем шрифт
-    SetBkMode(hdc, TRANSPARENT); //прозрачный фон
-
-    //рисуем информационное сообщение
-    RECT rectText = { rectClient.right - 180, 20, rectClient.right, rectClient.bottom };
-    DrawText(hdc, L"Выберите графики,\nкоторые вы хотите построить:", -1, &rectText, DT_WORDBREAK);
-
-    //добавляем CheckBox'ы
-    for (int i = 0; i < 3; i++) {
-        state = SendMessage(CheckBox[i], BM_GETCHECK, 0, 0);
-        DestroyWindow(CheckBox[i]); //удаляем CheckBox, чтобы заново нарисовать в другом месте
-        CheckBox[i] = CreateWindowEx(NULL, L"BUTTON", CheckBoxNames[i], WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-            rectClient.right - 170, 100 + i * 30, 110, 30, hGraphPage, (HMENU)CheckBoxIDs[i], NULL, NULL);
-        if (state == BST_CHECKED) SendMessage(CheckBox[i], BM_SETCHECK, BST_CHECKED, 0);
-    }
-
-    DeleteObject(hFont); //удаляем шрифт
 }
 
 double** getGraphData(int n)

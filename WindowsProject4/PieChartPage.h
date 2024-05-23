@@ -1,16 +1,15 @@
 //#pragma once
 
 #include <windows.h>
-#include <CommCtrl.h> // Для использования элемента управления TabControl
-#include <vector> // Для работы с данными для графиков и диаграмм
-#include <cmath> // Для математических функций
+#include <CommCtrl.h> // Р”Р»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ СЌР»РµРјРµРЅС‚Р° СѓРїСЂР°РІР»РµРЅРёСЏ TabControl
+#include <vector> // Р”Р»СЏ СЂР°Р±РѕС‚С‹ СЃ РґР°РЅРЅС‹РјРё РґР»СЏ РіСЂР°С„РёРєРѕРІ Рё РґРёР°РіСЂР°РјРј
+#include <cmath> // Р”Р»СЏ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРёС… С„СѓРЅРєС†РёР№
 #include <tchar.h>
 #include <string>
 #include <cstdlib>
 
-#pragma comment(lib, "Comctl32.lib") // Подключаем Comctl32.lib
+#pragma comment(lib, "Comctl32.lib") // РџРѕРґРєР»СЋС‡Р°РµРј Comctl32.lib
 
-//#define IDC_TABCONTROL 1001 // Примерный номер идентификатора для TabControl
 #define ID_TEXTBOX_5_1 5001
 #define ID_TEXTBOX_6_1 5011
 #define ID_TEXTBOX_7_1 5021
@@ -27,11 +26,12 @@
 #define ID_DELETE_BUTTON_2 6002
 #define ID_CREATE_BUTTON_2 6003
 
-extern WNDPROC g_pGraphPageProc; // Объявление и инициализация указателя
-extern WNDPROC g_pHistogramPageProc; // Объявление и инициализация указателя
-extern WNDPROC g_pPieChartPageProc; // Объявление и инициализация указателя
+// РћР±СЉСЏРІР»РµРЅРёРµ СѓРєР°Р·Р°С‚РµР»РµР№ РЅР° С„СѓРЅРєС†РёСЋ РѕР±СЂР°Р±РѕС‚С‡РёРєР° РѕРєРЅР°
+extern WNDPROC g_pGraphPageProc;
+extern WNDPROC g_pHistogramPageProc;
+extern WNDPROC g_pPieChartPageProc;
 
-// Глобальные переменные
+// Р“Р»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 extern HINSTANCE hInst;
 extern HWND hPieChartPage;
 
@@ -45,15 +45,15 @@ extern HWND addButtonPie;
 extern HWND deleteButtonPie;
 extern HWND createButtonPie;
 
-// Прототипы функций
+extern bool flagDrawPie;
+extern TCHAR* pieText[5][2];
+extern double* pieData; // РјР°СЃСЃРёРІ РґР°РЅРЅС‹С…, РіР»РѕР±Р°Р»СЊРЅС‹Р№
+extern int colors[15];
+
+// РџСЂРѕС‚РѕС‚РёРїС‹ С„СѓРЅРєС†РёР№
 LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // рисование отрезка прямой линии
-void DrawPieChart(HDC hdc, RECT rectClient);
-void DrawTextOnPieChartPage(HWND hWnd, HDC hdc, RECT rectClient); // текст
+void line(HDC hdc, int Xs, int Ys, int Xf, int Yf); // СЂРёСЃРѕРІР°РЅРёРµ РѕС‚СЂРµР·РєР° РїСЂСЏРјРѕР№ Р»РёРЅРёРё
+void DrawPieChart(HDC hdc, RECT rectClient); //СЂРёСЃРѕРІР°РЅРёРµ РєСЂСѓРіРѕРІРѕР№ РґРёР°РіСЂР°РјРјС‹
+void DrawTextOnPieChartPage(HWND hWnd, HDC hdc, RECT rectClient); // СЂРёСЃРѕРІР°РЅРёРµ С‚РµРєСЃС‚Р°
 int getPieChartData();
 bool containsLetters(TCHAR* str);
-extern bool flagDrawPie;
-
-extern TCHAR* pieText[5][2];
-extern double* pieData; // массив данных, глобальный
-extern int colors[5];

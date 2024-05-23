@@ -1,0 +1,75 @@
+﻿  DiagramPage.cpp
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(49,1): warning C4005: ID_TEXTBOX_0_1: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(13,1):
+  см. предыдущее определение "ID_TEXTBOX_0_1"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(50,1): warning C4005: ID_TEXTBOX_1_1: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(14,1):
+  см. предыдущее определение "ID_TEXTBOX_1_1"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(51,1): warning C4005: ID_TEXTBOX_2_1: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(15,1):
+  см. предыдущее определение "ID_TEXTBOX_2_1"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(52,1): warning C4005: ID_TEXTBOX_3_1: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(16,1):
+  см. предыдущее определение "ID_TEXTBOX_3_1"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(53,1): warning C4005: ID_TEXTBOX_4_1: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(17,1):
+  см. предыдущее определение "ID_TEXTBOX_4_1"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(55,1): warning C4005: ID_TEXTBOX_0_2: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(19,1):
+  см. предыдущее определение "ID_TEXTBOX_0_2"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(56,1): warning C4005: ID_TEXTBOX_1_2: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(20,1):
+  см. предыдущее определение "ID_TEXTBOX_1_2"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(57,1): warning C4005: ID_TEXTBOX_2_2: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(21,1):
+  см. предыдущее определение "ID_TEXTBOX_2_2"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(58,1): warning C4005: ID_TEXTBOX_3_2: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(22,1):
+  см. предыдущее определение "ID_TEXTBOX_3_2"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(59,1): warning C4005: ID_TEXTBOX_4_2: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(23,1):
+  см. предыдущее определение "ID_TEXTBOX_4_2"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(61,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(25,1):
+  см. предыдущее определение "ID_ADD_BUTTON"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(62,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(26,1):
+  см. предыдущее определение "ID_DELETE_BUTTON"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(63,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
+  (компиляция исходного файла "DiagramPage.cpp")
+  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(27,1):
+  см. предыдущее определение "ID_CREATE_BUTTON"
+  
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.cpp(5,7): warning C4101: state: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.cpp(6,6): warning C4101: length: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.cpp(466,7): warning C4101: state: неиспользованная локальная переменная
+  Создание кода
+  0 of 31 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Создание кода завершено
+  WindowsProject4.vcxproj -> C:\Users\daniil\source\repos\WindowsProject4\Release\WindowsProject4.exe
