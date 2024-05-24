@@ -38,13 +38,6 @@ double** x; // массив данных для построения графи�
 
 //Для построения гистограммы
 int numHistTextBox = 3;
-//int HistTextBoxIDs[5][2] = {
-//	{3001, 3002},
-//	{3011, 3012},
-//	{3021, 3022},
-//	{3031, 3032},
-//	{3041, 3042}
-//};
 int numHistColumns = 3;
 HWND histTextBox[20][2];
 TCHAR* histText[20][2];
@@ -65,13 +58,6 @@ double* histData; // массив данных для построения ги�
 
 //для построения диаграммы
 int numDiaTextBox = 3;
-//int diaTextBoxIDs[15][2] = {
-//	{3001, 3002},
-//	{3011, 3012},
-//	{3021, 3022},
-//	{3031, 3032},
-//	{3041, 3042}
-//};
 int numDiaColumns = 3;
 HWND diaTextBox[20][2];
 TCHAR* diaText[20][2];
@@ -94,16 +80,16 @@ double* diaData; // массив данных для построения гис
 
 //Для построения круговой диаграммы
 int numPieTextBox = 3;
-int pieTextBoxIDs[5][2] = {
-	{3001, 3002},
-	{3011, 3012},
-	{3021, 3022},
-	{3031, 3032},
-	{3041, 3042}
-};
+//int pieTextBoxIDs[7][2] = {
+//	{3001, 3002},
+//	{3011, 3012},
+//	{3021, 3022},
+//	{3031, 3032},
+//	{3041, 3042}
+//};
 int numSectors = 3;
-HWND pieTextBox[5][2];
-TCHAR* pieText[5][2];
+HWND pieTextBox[7][2];
+TCHAR* pieText[7][2];
 
 HWND addButtonPie;
 HWND deleteButtonPie;
@@ -134,6 +120,13 @@ TCHAR* freqText[20][2];
  double maxPos;
  double minNig;
 
+//Для случайного процесса
+ //extern HWND hRandomGraphPage;
+ //extern HWND hChildRandomPage;
+ //extern WNDPROC g_pChildPageProc; // Объявление и инициализация указателя
+HWND generateButtonRand;
+bool flagDrawRand;
+int randData[21]; // массив данных для построения гистограммы
 
 // Прототипы функций
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
@@ -158,7 +151,8 @@ int colors[15] = {
 	RGB(0, 0, 255),
 	RGB(153, 0, 153),
 	RGB(102, 0, 204),
-	RGB(0, 102, 0),
+
+	RGB(255, 102, 178),
 	RGB(96, 0, 96),
 	RGB(51, 255, 255),
 	RGB(255, 153, 255),
@@ -338,8 +332,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						ShowWindow(hHistogramPage, SW_HIDE);
 						ShowWindow(hDiagramPage, SW_HIDE);
 						ShowWindow(hPieChartPage, SW_HIDE);
-						ShowWindow(hHodographPage, SW_SHOW);
-						ShowWindow(hFrequencyPage, SW_HIDE);
+						ShowWindow(hHodographPage, SW_HIDE);
+						ShowWindow(hFrequencyPage, SW_SHOW);
 						break;
 					case 6:
 						ShowWindow(hGraphPage, SW_HIDE);
@@ -400,13 +394,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			tie.lParam = (LPARAM)hPieChartPage;
 			TabCtrl_InsertItem(hTabControl, 4, &tie);
 
-			tie.pszText = const_cast<LPTSTR>(L"Годограф");
-			tie.lParam = (LPARAM)hHodographPage;
-			TabCtrl_InsertItem(hTabControl, 5, &tie);
+			//tie.pszText = const_cast<LPTSTR>(L"Годограф");
+			//tie.lParam = (LPARAM)hHodographPage;
+			//TabCtrl_InsertItem(hTabControl, 5, &tie);
 
 			tie.pszText = const_cast<LPTSTR>(L"Частотная характеристика");
 			tie.lParam = (LPARAM)hFrequencyPage;
-			TabCtrl_InsertItem(hTabControl, 6, &tie);
+			TabCtrl_InsertItem(hTabControl, 5, &tie);
 
 			ShowWindow(hGraphPage, SW_SHOW);
 			ShowWindow(hRandomGraphPage, SW_HIDE);
@@ -461,7 +455,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			//Устанавливаем минимальные и максимальные размеры
 			LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
 			lpMMI->ptMinTrackSize.x = 700;
-			lpMMI->ptMinTrackSize.y = 370;
+			lpMMI->ptMinTrackSize.y = 500;
 			break;
 		}
 	case WM_DESTROY:
@@ -503,13 +497,13 @@ bool containsLetters(TCHAR* str)
 //		return DefWindowProc(hWnd, message, wParam, lParam);
 //}
 
-LRESULT CALLBACK RandomGraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	if (g_pRandomGraphPageProc)
-		return CallWindowProc(g_pRandomGraphPageProc, hWnd, message, wParam, lParam);
-	else
-		return DefWindowProc(hWnd, message, wParam, lParam);
-}
+//LRESULT CALLBACK RandomGraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+//{
+//	if (g_pRandomGraphPageProc)
+//		return CallWindowProc(g_pRandomGraphPageProc, hWnd, message, wParam, lParam);
+//	else
+//		return DefWindowProc(hWnd, message, wParam, lParam);
+//}
 
 LRESULT CALLBACK HodographPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

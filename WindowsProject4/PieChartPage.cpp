@@ -46,7 +46,7 @@ LRESULT CALLBACK PieChartPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 			case ID_ADD_BUTTON_2: //обработка нажатия на кнопку добавления
 				EnableWindow(deleteButtonPie, TRUE);
 				numPieTextBox += 1;
-				if (numPieTextBox == 5) EnableWindow(addButtonPie, FALSE);
+				if (numPieTextBox == 7) EnableWindow(addButtonPie, FALSE);
 				InvalidateRect(hPieChartPage, NULL, TRUE);
 				break;
 			case ID_DELETE_BUTTON_2: //обработка нажатия на кнопку удаления
@@ -136,30 +136,45 @@ void DrawPieChart(HDC hdc, RECT rectClient)
 		else
 			swprintf_s(numStr, L"%.2lf", pieData[i + 1]);
 
+		//hpen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0)); // перо толщиной в 2 пикселя
+		//SelectObject(hdc, hpen);
 		//создаем шрифт
-		hFont = CreateFont(max(15, min(0.16 * radius, 35)), 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+		hFont = CreateFont(max(15, min(0.18 * radius, 35)), 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
 		                   OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
 		                   DEFAULT_PITCH | FF_SWISS, L"Arial");
 		SelectObject(hdc, hFont); //выбираем шрифт
-		SetBkMode(hdc, OPAQUE);
+		//SetBkMode(hdc, OPAQUE);
+		SetBkMode(hdc, TRANSPARENT);
+		SetTextColor(hdc, RGB(255, 255, 255) - colors[i]); //белый цвет текста
 		DrawText(hdc, numStr, -1, &rectText, DT_WORDBREAK | DT_CENTER);
+		SetTextColor(hdc, RGB(0, 0, 0)); //белый цвет текста
+
 
 		//добавляем подписи к секторам
 		int xStLine = xCenter + radius * cos((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
 		int yStLine = yCenter - radius * sin((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
-		int xFinLine = xCenter + radius * 1.15 * cos((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
-		int yFinLine = yCenter - radius * 1.15 * sin((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
+		int xFinLine = xCenter + radius * 1.2 * cos((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
+		int yFinLine = yCenter - radius * 1.2 * sin((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);
 		line(hdc, xStLine, yStLine, xFinLine, yFinLine);
-		line(hdc, xFinLine, yFinLine,
+		/*line(hdc, xFinLine, yFinLine,
 		     (xFinLine < xCenter)
 			     ? (xFinLine - max(50, min(0.7 * radius, 150)))
-			     : (xFinLine + max(50, min(0.7 * radius, 150))), yFinLine);
+			     : (xFinLine + max(50, min(0.7 * radius, 150))), yFinLine);*/
+		line(hdc, xFinLine, yFinLine,
+			(xFinLine < xCenter)
+			? (xFinLine - 35)
+			: (xFinLine + 35), yFinLine);
 
-		hFont = CreateFont(max(13, min(0.12 * radius, 24)), 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+		DeleteObject(hFont);
+		/*hFont = CreateFont(max(13, min(0.12 * radius, 24)), 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+		                   OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+		                   DEFAULT_PITCH | FF_SWISS, L"Arial");*/
+		hFont = CreateFont(max(15, min(0.16 * radius, 35)), 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
 		                   OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
 		                   DEFAULT_PITCH | FF_SWISS, L"Arial");
 		SelectObject(hdc, hFont); //выбираем шрифт
 		SetBkMode(hdc, TRANSPARENT); //прозрачный фон
+
 		//находим положения текста
 		if (xFinLine < xCenter)
 		{
@@ -171,7 +186,7 @@ void DrawPieChart(HDC hdc, RECT rectClient)
 			rectText.left = xFinLine + max(10, min(0.06 * radius, 10));
 			rectText.right = xFinLine + max(100, min(0.75 * radius, 200));
 		}
-		rectText.top = yFinLine - max(15, min(0.12 * radius, 30));
+		rectText.top = yFinLine - max(15, min(0.15 * radius, 30));
 		rectText.bottom = yFinLine;
 		//рисуем текст
 		DrawText(hdc, pieText[i][1], -1, &rectText, DT_WORDBREAK | ((xFinLine < xCenter) ? DT_RIGHT : DT_LEFT));
@@ -200,6 +215,7 @@ void DrawTextOnPieChartPage(HWND hWnd, HDC hdc, RECT rectClient)
 	for (int i = 0; i < numPieTextBox; i++)
 	{
 		TCHAR* buffer;
+		wchar_t numStr[10]; //буфер для числа
 
 		length = GetWindowTextLength(pieTextBox[i][0]); //получаем длину строки в текстовом поле
 		buffer = new TCHAR[length + 1]; //создаем буффер для хранения строки
@@ -207,17 +223,18 @@ void DrawTextOnPieChartPage(HWND hWnd, HDC hdc, RECT rectClient)
 		DestroyWindow(pieTextBox[i][0]); //удаляем TextBox, чтобы заново нарисовать в другом месте
 		pieTextBox[i][0] = CreateWindowEx(NULL, L"Edit", L"", WS_CHILD | WS_VISIBLE | WS_BORDER, rectClient.right - 230,
 		                                  40 + i * 30, 60, 20,
-		                                  hWnd, (HMENU)pieTextBoxIDs[i][0],
+		                                  hWnd, nullptr,
 		                                  (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), nullptr);
 		SetWindowText(pieTextBox[i][0], buffer);
 
 		length = GetWindowTextLength(pieTextBox[i][1]); //получаем длину строки в текстовом поле
 		buffer = new TCHAR[length + 1]; //создаем буффер для хранения строки
 		GetWindowText(pieTextBox[i][1], buffer, length + 1); //получаем текст из текстового поля
+
 		DestroyWindow(pieTextBox[i][1]); //удаляем TextBox, чтобы заново нарисовать в другом месте
 		pieTextBox[i][1] = CreateWindowEx(NULL, L"Edit", L"", WS_CHILD | WS_VISIBLE | WS_BORDER, rectClient.right - 160,
 		                                  40 + i * 30, 160, 20,
-		                                  hWnd, (HMENU)pieTextBoxIDs[i][1],
+		                                  hWnd, nullptr,
 		                                  (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE), nullptr);
 		SetWindowText(pieTextBox[i][1], buffer);
 

@@ -121,7 +121,6 @@ void DrawFrequency(HDC hdc, RECT rectClient)
 	rectText = { width, horizontalAxis - 25, width + 50, horizontalAxis - 10 };
 	DrawText(hdc, L"k", -1, &rectText, DT_WORDBREAK | DT_LEFT); //рисуем текст
 
-
 	line(hdc, 50, rectClient.bottom - 30, 50, rectClient.top + 10); // вертикальная ось гистограммы
 	//стрелка на конце
 	line(hdc, 50 - 5, rectClient.top + 10 + 10, 50, rectClient.top + 10);
@@ -439,7 +438,6 @@ LRESULT CALLBACK ChildFreqPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			for (int i = 0; i < MAX_FREQUENCY_TEXTBOX; i++)
 			{
 				wchar_t numStr[10]; //буфер для числа
-				//добавления текста в сообщение для пользователя
 				swprintf(numStr, sizeof(numStr) / sizeof(numStr[0]), L"%d", i);
 				freqTextBox[i][0] = CreateWindowEx(NULL, L"Edit", numStr, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER,
 				                                   xStart, 40 + i * 30, 50, 20,
