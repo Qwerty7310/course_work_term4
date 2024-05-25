@@ -242,7 +242,7 @@ void DrawFrequency(HDC hdc, RECT rectClient)
 		}
 
 		line(hdc, 50 + i * (width - 70) / 20, horizontalAxis - 0, 50 + i * (width - 70) / 20, top);
-		Ellipse(hdc, 50 + i * (width - 70) / 20 - 4, top - 4, 50 + i * (width - 70) / 20 + 4, top + 4);
+		Ellipse(hdc, 50 + i * (width - 70) / 20 - 3, top - 3, 50 + i * (width - 70) / 20 + 3, top + 3);
 	}
 	DeleteObject(hFont);
 	hFont = CreateFont(18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
@@ -254,7 +254,7 @@ void DrawFrequency(HDC hdc, RECT rectClient)
 	//числа на горизонтальной шкале
 	for (int i = 1; i < 21; i++)
 	{
-		rectText = { 50 + i * (width - 70) / 20 - 10, horizontalAxis + ((freqData[i] > 0 || i > numFreqColumns) ? 5 : -23), 50 + i * (width - 70) / 20 + 10, horizontalAxis + ((freqData[i] || i > numFreqColumns) > 0 ? 30 : -5) };
+		rectText = { 50 + i * (width - 70) / 20 - 10, horizontalAxis + ((freqData[i] >= 0 || i >= numFreqColumns) ? 5 : -23), 50 + i * (width - 70) / 20 + 10, horizontalAxis + ((freqData[i] >= 0 || i >= numFreqColumns) ? 30 : -5) };
 		swprintf_s(str1, L"%d", i); //дробное число
 		DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_CENTER); //рисуем текст
 	}
@@ -435,7 +435,7 @@ LRESULT CALLBACK ChildFreqPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			SendMessage(hStaticText, WM_SETFONT, (WPARAM)hFont, TRUE);
 			// Сохранение дескриптора текста в пользовательских данных окна
 			SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)hStaticText);
-			for (int i = 0; i < MAX_FREQUENCY_TEXTBOX; i++)
+			for (int i = 0; i <= MAX_FREQUENCY_TEXTBOX; i++)
 			{
 				wchar_t numStr[10]; //буфер для числа
 				swprintf(numStr, sizeof(numStr) / sizeof(numStr[0]), L"%d", i);
@@ -486,15 +486,10 @@ LRESULT CALLBACK ChildFreqPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 		break;
 	case WM_SIZE:
 		{
-			//ShowWindow(hChildFreqPage, SW_SHOW);
 			// Получаем новые размеры окна
-
 			RECT rcClient;
 			GetClientRect(hChildFreqPage, &rcClient);
 			curFreqChildWidth = rcClient.bottom;
-
-			//SetWindowPos(hTabControl, NULL, 10, 30, rcClient.right - 20, rcClient.bottom - 40, SWP_NOZORDER);
-
 			SetWindowPos(upButtonFreq, NULL, rcClient.right - 25, rcClient.bottom - 55, 20, 20, SWP_NOZORDER);
 			SetWindowPos(downButtonFreq, NULL, rcClient.right - 25, rcClient.bottom - 25, 20, 20, SWP_NOZORDER);
 
@@ -525,7 +520,6 @@ LRESULT CALLBACK ChildFreqPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			PAINTSTRUCT ps;
 			HDC hdc = BeginPaint(hChildFreqPage, &ps);
 			FillRect(hdc, &rectClient, (HBRUSH)(COLOR_WINDOW));
-			//DrawTextOnFreqgramPage(hWnd, hdc, ps.rcPaint); // рисуем текст
 			EndPaint(hChildFreqPage, &ps);
 		}
 		break;
@@ -539,9 +533,6 @@ LRESULT CALLBACK ChildFreqPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			case ID_ADD_BUTTON: //обработка нажатия на кнопку добавления
 				numFreqTextBox += 1;
 				GetClientRect(hFrequencyPage, &rcClient);
-
-			//SetWindowPos(hTabControl, NULL, 10, 30, rcClient.right - 20, rcClient.bottom - 40, SWP_NOZORDER);
-
 				SetWindowPos(hChildFreqPage, NULL, rcClient.right - 220, 20, 220,
 				             min(rcClient.bottom - 20, 40 + (numFreqTextBox + 1) * 30 + 40), SWP_NOZORDER);
 
@@ -582,9 +573,6 @@ LRESULT CALLBACK ChildFreqPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 				EnableWindow(addButtonFreq, TRUE);
 				numFreqTextBox -= 1;
 				GetClientRect(hFrequencyPage, &rcClient);
-
-			//SetWindowPos(hTabControl, NULL, 10, 30, rcClient.right - 20, rcClient.bottom - 40, SWP_NOZORDER);
-
 				SetWindowPos(hChildFreqPage, NULL, rcClient.right - 220, 20, 220,
 				             min(rcClient.bottom - 20, 40 + (numFreqTextBox + 1) * 30 + 40), SWP_NOZORDER);
 
@@ -648,7 +636,6 @@ LRESULT CALLBACK ChildFreqPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 		break;
 	}
 
-	//return DefWindowProc(hWnd, message, wParam, lParam);
 	if (g_pChildFreqPageProc)
 		return CallWindowProc(g_pChildFreqPageProc, hWnd, message, wParam, lParam);
 	else

@@ -24,20 +24,14 @@ LRESULT CALLBACK RandomGraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		{
 			RECT rcClient;
 			GetClientRect(hRandomGraphPage, &rcClient);
-
 			SetWindowPos(generateButtonRand, NULL, rcClient.right / 2 - 200, rcClient.bottom - 25, 0, 0, SWP_NOSIZE);
-			//SetWindowPos(downButtonFreq, NULL, rcClient.right - 25, rcClient.bottom - 25, 20, 20, SWP_NOZORDER);
-
 			break;
 		}
 	case WM_PAINT:
 		{
 			PAINTSTRUCT ps;
 			HDC hdc = BeginPaint(hRandomGraphPage, &ps);
-
-			//if (flagDrawRand) DrawRandom(hdc, ps.rcPaint);
 			DrawRandomGraph(hdc, ps.rcPaint);
-
 			EndPaint(hRandomGraphPage, &ps);
 			break;
 		}
@@ -116,8 +110,8 @@ void DrawRandomGraph(HDC hdc, RECT rectClient)
 	DrawText(hdc, L"f(x)", -1, &rectText, DT_WORDBREAK | DT_LEFT); //рисуем текст
 
 	//насечки на горизонтальной оси
-	for (int i = 1; i < 21; i++)
-		line(hdc, 50 + i * (width - 70) / 20, horizontalAxis - 3, 50 + i * (width - 70) / 20, horizontalAxis + 3);
+	for (int i = 1; i < 101; i++)
+		line(hdc, 50 + i * (width - 70) / 100, horizontalAxis - 3, 50 + i * (width - 70) / 100, horizontalAxis + 3);
 
 	DeleteObject(hFont);
 	hFont = CreateFont(18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
@@ -126,31 +120,33 @@ void DrawRandomGraph(HDC hdc, RECT rectClient)
 	SetTextColor(hdc, RGB(0, 0, 0)); //выбираем цвет текста
 	SelectObject(hdc, hFont); //выбираем шрифт
 	SetBkMode(hdc, TRANSPARENT); //прозрачный фон
-	//TCHAR str1[20];
-	for (int i = 1; i < 21; i++)
+	//горизонтальная числовая шкала
+	for (int i = 10; i < 101; i += 10)
 	{
 		rectText = {
-			50 + i * (width - 70) / 20 - 10, horizontalAxis + 5, 50 + i * (width - 70) / 20 + 10,
+			50 + i * (width - 70) / 100 - 15, horizontalAxis + 5, 50 + i * (width - 70) / 100 + 15,
 			horizontalAxis + 30
 		};
 		swprintf_s(str1, L"%d", i);
 		DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_CENTER); //рисуем текст
 	}
 
-
 	//насечки на вертикальной оси и числовая шкала
-
 	for (int i = 1; i < 11; i++)
 	{
 		line(hdc, 50 - 3, horizontalAxis - i * interval, 50 + 3, horizontalAxis - i * interval);
-		rectText = {0, horizontalAxis - i * interval - 10, 40, horizontalAxis - i * interval + 10};
-		swprintf_s(str1, L"%d", i);
-		DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_RIGHT); //рисуем текст
-
 		line(hdc, 50 - 3, horizontalAxis + i * interval, 50 + 3, horizontalAxis + i * interval);
-		rectText = {0, horizontalAxis + i * interval - 10, 40, horizontalAxis + i * interval + 10};
-		swprintf_s(str1, L"%d", -i);
-		DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_RIGHT); //рисуем текст
+
+		if (i % 2 == 0)
+		{
+			rectText = { 0, horizontalAxis - i * interval - 10, 40, horizontalAxis - i * interval + 10 };
+			swprintf_s(str1, L"%d", i);
+			DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_RIGHT); //рисуем текст
+
+			rectText = { 0, horizontalAxis + i * interval - 10, 40, horizontalAxis + i * interval + 10 };
+			swprintf_s(str1, L"%d", -i);
+			DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_RIGHT); //рисуем текст
+		}
 	}
 
 	//число 0
@@ -164,62 +160,27 @@ void DrawRandomGraph(HDC hdc, RECT rectClient)
 	int maxHeight = 0;
 	HBRUSH hBrush = CreateSolidBrush(RGB(color[0], color[1], color[2]));
 	SelectObject(hdc, hBrush);
-	hpen = CreatePen(PS_SOLID, 3, RGB(color[0], color[1], color[2])); // перо толщиной в 2 пикселя
+	hpen = CreatePen(PS_SOLID, 2, RGB(color[0], color[1], color[2])); // перо толщиной в 2 пикселя
 	SelectObject(hdc, hpen);
 
 	if (flagDrawRand)
 	{
-		/*getRandomData();*/
-
-		for (int i = 0; i < 21; i++)
+		for (int i = 0; i < 101; i++)
 		{
 			if (i != 0)
-				line(hdc, 50 + (i - 1) * (width - 70) / 20, top, 50 + i * (width - 70) / 20,
+				line(hdc, 50 + (i - 1) * (width - 70) / 100, top, 50 + i * (width - 70) / 100,
 				     horizontalAxis - (maxHeight * randData[i] / 10));
 			maxHeight = 10 * interval;
 			top = horizontalAxis - (maxHeight * randData[i] / 10);
-			//top = horizontalAxis - (maxHeight * 7 / 10);
-			Ellipse(hdc, 50 + i * (width - 70) / 20 - 4, top - 4, 50 + i * (width - 70) / 20 + 4, top + 4);
+			Ellipse(hdc, 50 + i * (width - 70) / 100 - 3, top - 3, 50 + i * (width - 70) / 100 + 3, top + 3);
 		}
 	}
-
-
-	//for (int i = 0; i < numRandColumns; i++)
-	//{
-	//	if (randData[i] >= 0)
-	//	{
-	//		maxHeight = (maxRandLevel > 0 ? 5 : addLevel) * interval;
-	//		top = horizontalAxis - (maxHeight * randData[i] / maxPositive);
-	//	}
-	//	else
-	//	{
-	//		maxHeight = (maxRandLevel < 0 ? -5 : addLevel) * interval;
-	//		top = horizontalAxis - (maxHeight * randData[i] / minNigative);
-	//	}
-
-	//	line(hdc, 50 + i * (width - 70) / 20, horizontalAxis - 0, 50 + i * (width - 70) / 20, top);
-	//	Ellipse(hdc, 50 + i * (width - 70) / 20 - 4, top - 4, 50 + i * (width - 70) / 20 + 4, top + 4);
-	//}
-	//DeleteObject(hFont);
-	//hFont = CreateFont(18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
-	//	OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-	//	DEFAULT_PITCH | FF_SWISS, L"Arial");
-	//SetTextColor(hdc, RGB(0, 0, 0)); //выбираем цвет текста
-	//SelectObject(hdc, hFont); //выбираем шрифт
-	//SetBkMode(hdc, TRANSPARENT); //прозрачный фон
-	////числа на горизонтальной шкале
-	//for (int i = 1; i < 21; i++)
-	//{
-	//	rectText = { 50 + i * (width - 70) / 20 - 10, horizontalAxis + ((randData[i] > 0 || i > numRandColumns) ? 5 : -23), 50 + i * (width - 70) / 20 + 10, horizontalAxis + ((randData[i] || i > numRandColumns) > 0 ? 30 : -5) };
-	//	swprintf_s(str1, L"%d", i); //дробное число
-	//	DrawText(hdc, str1, -1, &rectText, DT_WORDBREAK | DT_CENTER); //рисуем текст
-	//}
 }
 
 void getRandomData()
 {
 	int min = -10;
 	int max = 10;
-	for (int i = 0; i < 21; i++)
+	for (int i = 0; i < 101; i++)
 		randData[i] = min + rand() % (max - min + 1);
 }

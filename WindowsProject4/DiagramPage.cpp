@@ -429,9 +429,7 @@ LRESULT CALLBACK ChildDiaPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 		break;
 	case WM_SIZE:
 		{
-			//ShowWindow(hChildDiaPage, SW_SHOW);
 			// Получаем новые размеры окна
-
 			RECT rcClient;
 			GetClientRect(hChildDiaPage, &rcClient);
 			curDiaChildWidth = rcClient.bottom;
@@ -482,9 +480,6 @@ LRESULT CALLBACK ChildDiaPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 			case ID_ADD_BUTTON: //обработка нажатия на кнопку добавления
 				numDiaTextBox += 1;
 				GetClientRect(hDiagramPage, &rcClient);
-
-			//SetWindowPos(hTabControl, NULL, 10, 30, rcClient.right - 20, rcClient.bottom - 40, SWP_NOZORDER);
-
 				SetWindowPos(hChildDiaPage, NULL, rcClient.right - 290, 20, 290,
 				             min(rcClient.bottom - 20, 40 + (numDiaTextBox + 1) * 30 + 40), SWP_NOZORDER);
 
@@ -525,9 +520,6 @@ LRESULT CALLBACK ChildDiaPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 				EnableWindow(addButtonDia, TRUE);
 				numDiaTextBox -= 1;
 				GetClientRect(hDiagramPage, &rcClient);
-
-			//SetWindowPos(hTabControl, NULL, 10, 30, rcClient.right - 20, rcClient.bottom - 40, SWP_NOZORDER);
-
 				SetWindowPos(hChildDiaPage, NULL, rcClient.right - 290, 20, 290,
 				             min(rcClient.bottom - 20, 40 + (numDiaTextBox + 1) * 30 + 40), SWP_NOZORDER);
 
@@ -591,7 +583,6 @@ LRESULT CALLBACK ChildDiaPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 		break;
 	}
 
-	//return DefWindowProc(hWnd, message, wParam, lParam);
 	if (g_pChildDiaPageProc)
 		return CallWindowProc(g_pChildDiaPageProc, hWnd, message, wParam, lParam);
 	else

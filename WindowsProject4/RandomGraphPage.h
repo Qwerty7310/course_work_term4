@@ -23,7 +23,7 @@ extern WNDPROC g_pRandomGraphPageProc; // Объявление и инициал
 extern HWND generateButtonRand;
 
 extern bool flagDrawRand;
-extern int randData[21]; // массив данных для построения
+extern int randData[101]; // массив данных для построения
 
 // Прототипы функций
 LRESULT CALLBACK RandomGraphPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

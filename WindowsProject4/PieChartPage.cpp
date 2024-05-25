@@ -135,20 +135,15 @@ void DrawPieChart(HDC hdc, RECT rectClient)
 			swprintf_s(numStr, L"%d", (int)pieData[i + 1]);
 		else
 			swprintf_s(numStr, L"%.2lf", pieData[i + 1]);
-
-		//hpen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0)); // перо толщиной в 2 пикселя
-		//SelectObject(hdc, hpen);
 		//создаем шрифт
 		hFont = CreateFont(max(15, min(0.18 * radius, 35)), 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
 		                   OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
 		                   DEFAULT_PITCH | FF_SWISS, L"Arial");
 		SelectObject(hdc, hFont); //выбираем шрифт
-		//SetBkMode(hdc, OPAQUE);
 		SetBkMode(hdc, TRANSPARENT);
 		SetTextColor(hdc, RGB(255, 255, 255) - colors[i]); //белый цвет текста
 		DrawText(hdc, numStr, -1, &rectText, DT_WORDBREAK | DT_CENTER);
 		SetTextColor(hdc, RGB(0, 0, 0)); //белый цвет текста
-
 
 		//добавляем подписи к секторам
 		int xStLine = xCenter + radius * cos((startAngle + 0.5 * sweepAngl) / 180. * 3.14159265358979);

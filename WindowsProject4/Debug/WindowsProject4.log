@@ -1,98 +1,29 @@
-﻿  WindowsProject4.cpp
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(25,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(13,1):
-  см. предыдущее определение "ID_ADD_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(26,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(14,1):
-  см. предыдущее определение "ID_DELETE_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(27,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(15,1):
-  см. предыдущее определение "ID_CREATE_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(25,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(25,1):
-  см. предыдущее определение "ID_ADD_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(26,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(26,1):
-  см. предыдущее определение "ID_DELETE_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(27,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(27,1):
-  см. предыдущее определение "ID_CREATE_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(61,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(25,1):
-  см. предыдущее определение "ID_ADD_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(62,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(26,1):
-  см. предыдущее определение "ID_DELETE_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(63,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(27,1):
-  см. предыдущее определение "ID_CREATE_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(64,1): warning C4005: ID_UP_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(28,1):
-  см. предыдущее определение "ID_UP_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(65,1): warning C4005: ID_DOWN_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\HistogramPage.h(29,1):
-  см. предыдущее определение "ID_DOWN_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(13,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(61,1):
-  см. предыдущее определение "ID_ADD_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(14,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(62,1):
-  см. предыдущее определение "ID_DELETE_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(15,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(63,1):
-  см. предыдущее определение "ID_CREATE_BUTTON"
-  
+﻿  FrequencyPage.cpp
 C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(25,1): warning C4005: ID_ADD_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
+  (компиляция исходного файла "FrequencyPage.cpp")
   C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(13,1):
   см. предыдущее определение "ID_ADD_BUTTON"
   
 C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(26,1): warning C4005: ID_DELETE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
+  (компиляция исходного файла "FrequencyPage.cpp")
   C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(14,1):
   см. предыдущее определение "ID_DELETE_BUTTON"
   
 C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(27,1): warning C4005: ID_CREATE_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
+  (компиляция исходного файла "FrequencyPage.cpp")
   C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(15,1):
   см. предыдущее определение "ID_CREATE_BUTTON"
   
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(28,1): warning C4005: ID_UP_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(64,1):
-  см. предыдущее определение "ID_UP_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.h(29,1): warning C4005: ID_DOWN_BUTTON: изменение макроопределения
-  (компиляция исходного файла "WindowsProject4.cpp")
-  C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\DiagramPage.h(65,1):
-  см. предыдущее определение "ID_DOWN_BUTTON"
-  
-C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\WindowsProject4.cpp(420,9): warning C4101: r: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(5,7): warning C4101: state: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(6,6): warning C4101: length: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(216,17): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(222,17): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(236,25): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(241,25): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(77,14): warning C4101: max: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(77,9): warning C4101: min: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(330,11): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(362,47): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(408,7): warning C4101: state: неиспользованная локальная переменная
+C:\Users\daniil\source\repos\WindowsProject4\WindowsProject4\FrequencyPage.cpp(528,9): warning C4101: hStaticText: неиспользованная локальная переменная
   WindowsProject4.vcxproj -> C:\Users\daniil\source\repos\WindowsProject4\Debug\WindowsProject4.exe

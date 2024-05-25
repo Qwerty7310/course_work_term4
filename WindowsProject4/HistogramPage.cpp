@@ -67,6 +67,7 @@ LRESULT CALLBACK HistogramPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 void DrawHistogram(HDC hdc, RECT rectClient)
 {
+	RECT rectText;
 	int color[3] = {255, 178, 102};
 	//int borderColor[3] = {100, 100, 100};
 	int borderColor[3] = {0, 0, 0};
@@ -84,9 +85,35 @@ void DrawHistogram(HDC hdc, RECT rectClient)
 	//рисуем оси гистограммы
 	hpen = CreatePen(PS_SOLID, 3, RGB(100, 100, 100)); // перо толщиной в 3 пикселя
 	SelectObject(hdc, hpen);
+
 	line(hdc, 50, rectClient.bottom - 30, width, rectClient.bottom - 30); // горизонтальная ось гистограммы
-	line(hdc, 50, rectClient.bottom - 30, 50, rectClient.top + 30); // вертикальная ось гистограммы
+	//стрелка на конце
+	line(hdc, width - 10, rectClient.bottom - 30 - 5, width, rectClient.bottom - 30);
+	line(hdc, width - 10, rectClient.bottom - 30 + 5, width, rectClient.bottom - 30);
+	HFONT hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+		DEFAULT_PITCH | FF_SWISS, L"Arial");
+	SetTextColor(hdc, RGB(0, 0, 0)); //выбираем цвет текста
+	SelectObject(hdc, hFont); //выбираем шрифт
+	SetBkMode(hdc, TRANSPARENT); //прозрачный фон
+	rectText = { width - 5, rectClient.bottom - 30 - 25, width + 50, rectClient.bottom - 30 - 10 };
+	DrawText(hdc, L"x", -1, &rectText, DT_WORDBREAK | DT_LEFT); //рисуем текст
+	DeleteObject(hFont);
+
+	line(hdc, 50, rectClient.bottom - 30, 50, rectClient.top + 10); // вертикальная ось гистограммы
+	//стрелка на конце
+	line(hdc, 50 - 5, rectClient.top + 10 + 10, 50, rectClient.top + 10);
+	line(hdc, 50 + 5, rectClient.top + 10 + 10, 50, rectClient.top + 10);
 	DeleteObject(hpen);
+	hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+		DEFAULT_PITCH | FF_SWISS, L"Arial");
+	SetTextColor(hdc, RGB(0, 0, 0)); //выбираем цвет текста
+	SelectObject(hdc, hFont); //выбираем шрифт
+	SetBkMode(hdc, TRANSPARENT); //прозрачный фон
+	rectText = { 50 + 10, rectClient.top + 5, 50 + 60, rectClient.top + 10 + 30 };
+	DrawText(hdc, L"P(x)", -1, &rectText, DT_WORDBREAK | DT_LEFT); //рисуем текст
+	DeleteObject(hFont);
 
 	hpen = CreatePen(PS_SOLID, 2, RGB(170, 170, 170)); // перо толщиной в 2 пикселя
 	SelectObject(hdc, hpen);
@@ -96,7 +123,7 @@ void DrawHistogram(HDC hdc, RECT rectClient)
 	DeleteObject(hpen);
 
 	//создаем шрифт
-	HFONT hFont = CreateFont(16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+	hFont = CreateFont(16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
 		OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
 		DEFAULT_PITCH | FF_SWISS, L"Arial");
 
@@ -129,8 +156,8 @@ void DrawHistogram(HDC hdc, RECT rectClient)
 	int length; //длина текста
 
 	//рисуем столбцы
-	int leftColumnX = rectClient.left + 75;
-	int rightColumnX = rectClient.left + width - 20;
+	int leftColumnX = rectClient.left + 51;
+	int rightColumnX = rectClient.left + width - 60;
 	int widthColumn = (rightColumnX - leftColumnX) / numHistColumns;
 	for (int i = 0; i < numHistColumns; i++)
 	{
@@ -175,9 +202,9 @@ void DrawHistogram(HDC hdc, RECT rectClient)
 	for (int i = 0; i < numHistColumns; i++)
 	{
 		RECT rectText; //получаем область текста
-		rectText.left = leftColumnX + i * widthColumn; //верхний левый угол
+		rectText.left = leftColumnX + (i + 0.5) * widthColumn; //верхний левый угол
 		rectText.top = rectClient.bottom - 20;
-		rectText.right = leftColumnX + (i + 1) * widthColumn; //нижний правый угол
+		rectText.right = leftColumnX + (i + 1.5) * widthColumn; //нижний правый угол
 		rectText.bottom = rectText.top + 20;
 
 		DrawText(hdc, histText[i][1], -1, &rectText, DT_WORDBREAK | DT_CENTER); //добалвяем подпись к столбцу
@@ -535,8 +562,6 @@ LRESULT CALLBACK ChildHistPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			numHistTextBox -= 1;
 			GetClientRect(hHistogramPage, &rcClient);
 
-			//SetWindowPos(hTabControl, NULL, 10, 30, rcClient.right - 20, rcClient.bottom - 40, SWP_NOZORDER);
-
 			SetWindowPos(hChildHistPage, NULL, rcClient.right - 290, 20, 290,
 				min(rcClient.bottom - 20, 40 + (numHistTextBox + 1) * 30 + 40), SWP_NOZORDER);
 
@@ -600,7 +625,6 @@ LRESULT CALLBACK ChildHistPageProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 	break;
 	}
 
-	//return DefWindowProc(hWnd, message, wParam, lParam);
 	if (g_pChildHistPageProc)
 		return CallWindowProc(g_pChildHistPageProc, hWnd, message, wParam, lParam);
 	else
