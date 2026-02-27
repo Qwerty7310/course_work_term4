@@ -1,1 +1,16 @@
 .vs/
+Debug/
+Release/
+**/Debug/
+**/Release/
+
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.ipdb
+*.iobj
+*.aps
+*.log
+*.recipe
